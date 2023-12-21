@@ -14,5 +14,5 @@ GnoSQL Client is a Go library that provides a client for interacting with the Gn
 ## Installation
 
 ```bash
-go get -u github.com/nanda03dev/gnosql-client
+go get -u github.com/nanda03dev/gnosql_client
 ```
