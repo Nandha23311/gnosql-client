@@ -1,4 +1,4 @@
-module github.com/nandha23311/gnosql_client
+module github.com/nanda03dev/gnosql_client
 
 go 1.21.5
 
