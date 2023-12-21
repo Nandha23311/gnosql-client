@@ -1,6 +1,6 @@
-# Gnosql Client for Gnosql In-Memory Database
+# GnoSQL Client for GnoSQL In-Memory Database
 
-Gnosql Client is a Go library that provides a client for interacting with the Gnosql in-memory database. It simplifies the process of managing connections, executing queries, and working with data in a Gnosql database.
+GnoSQL Client is a Go library that provides a client for interacting with the GnoSQL in-memory database. It simplifies the process of managing connections, executing queries, and working with data in a GnoSQL database.
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
@@ -14,5 +14,5 @@ Gnosql Client is a Go library that provides a client for interacting with the Gn
 ## Installation
 
 ```bash
-go get -u github.com/nandha23311/gnosql-client
+go get -u github.com/nanda03dev/gnosql-client
 ```
