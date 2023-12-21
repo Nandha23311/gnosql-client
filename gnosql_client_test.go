@@ -7,18 +7,16 @@ import (
 
 func TestFullFlow(t *testing.T) {
 	uri := "http://localhost:5454"
-	newClinet := Connect(uri)
-
-	println("newClinet ", newClinet.URI)
+	newClient := Connect(uri)
 
 	var DatabaseName = "test-g-c"
-	var CreateDatabaseResult, _ = newClinet.Create(DatabaseName)
+	var CreateDatabaseResult, _ = newClient.Create(DatabaseName)
 	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
 
-	var GetAllDatabaseResult, _ = newClinet.GetAll()
+	var GetAllDatabaseResult, _ = newClient.GetAll()
 	fmt.Printf("\nGetAllDatabaseResult %v \n", GetAllDatabaseResult.Data)
 
-	var db *Database = newClinet.DB[DatabaseName]
+	var db *Database = newClient.DB[DatabaseName]
 
 	if db != nil {
 		var userCollectionName = "users"
@@ -92,7 +90,7 @@ func TestFullFlow(t *testing.T) {
 
 	}
 
-	var DeleteDatabaseResult, _ = newClinet.Delete(DatabaseName)
+	var DeleteDatabaseResult, _ = newClient.Delete(DatabaseName)
 	fmt.Printf("\n DeleteDatabaseResult %v ", DeleteDatabaseResult)
 
 }
