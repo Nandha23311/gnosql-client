@@ -56,7 +56,7 @@ func (client *Client) Delete(databaseName string) (DatabaseDeleteResult, error) 
 
 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseDelete)
 
-	requestBody := MapInterface{
+	requestBody := ReqBody{
 		"DatabaseName": databaseName,
 	}
 

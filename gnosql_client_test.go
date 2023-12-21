@@ -14,7 +14,7 @@ func TestFullFlow(t *testing.T) {
 	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
 
 	var GetAllDatabaseResult, _ = newClient.GetAll()
-	fmt.Printf("\nGetAllDatabaseResult %v \n", GetAllDatabaseResult.Data)
+	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult.Data)
 
 	var db *Database = newClient.DB[DatabaseName]
 
@@ -43,8 +43,15 @@ func TestFullFlow(t *testing.T) {
 		var GetCollectionStatsResult, _ = db.GetCollectionStats(userCollectionName)
 		fmt.Printf("\n GetCollectionStatsResult %v \n", GetCollectionStatsResult)
 
-		var DeleteCollectionResult, _ = db.DeleteCollections([]string{orderCollectionName})
+		var collectionDeleteInput = CollectionDeleteInput{
+			Collections: []string{orderCollectionName},
+		}
+		
+		var DeleteCollectionResult, _ = db.DeleteCollections(collectionDeleteInput)
 		fmt.Printf("\n DeleteCollectionResult %v \n", DeleteCollectionResult)
+
+		var GetCollectionsResult2, _ = db.GetAll()
+		fmt.Printf("\n GetCollectionsResult2 %v \n", GetCollectionsResult2)
 
 		var userCollection *Collection = db.Collections[userCollectionName]
 
@@ -71,7 +78,7 @@ func TestFullFlow(t *testing.T) {
 			var DocumentReadResult, _ = userCollection.Read(id)
 			fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
 
-			var filter MapInterface = MapInterface{
+			var filter DocumentFilterQuery = DocumentFilterQuery{
 				"name": "Nandakumar",
 			}
 

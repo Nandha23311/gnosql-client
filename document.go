@@ -44,7 +44,7 @@ func (collection *Collection) Read(id string) (DocumentReadResult, error) {
 }
 
 // return { Data : []Document, Error: "Error message" }, error
-func (collection *Collection) Filter(filter MapInterface) (DocumentFilterResult, error) {
+func (collection *Collection) Filter(filter DocumentFilterQuery) (DocumentFilterResult, error) {
 
 	path := fmt.Sprintf("%s/%s/%s/%s/filter", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName)
 

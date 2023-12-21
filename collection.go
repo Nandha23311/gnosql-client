@@ -44,16 +44,12 @@ func (database *Database) CreateCollections(collections []CollectionInput) (Coll
 }
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (database *Database) DeleteCollections(collections []string) (CollectionDeleteResult, error) {
+func (database *Database) DeleteCollections(collectionDeleteInput CollectionDeleteInput) (CollectionDeleteResult, error) {
 	path := fmt.Sprintf("%s/%s/%s/delete", database.URI, EndpointsMap.Collection, database.DBName)
-
-	requestBody := MapInterface{
-		"collections": collections,
-	}
 
 	restyResp, restyErr := resty.New().
 		R().
-		SetBody(requestBody).
+		SetBody(collectionDeleteInput).
 		Delete(path)
 
 	var result CollectionDeleteResult
@@ -64,7 +60,7 @@ func (database *Database) DeleteCollections(collections []string) (CollectionDel
 
 	if error == nil {
 		if result.Data == "collection deleted successfully" {
-			for _, collection := range collections {
+			for _, collection := range collectionDeleteInput.Collections {
 
 				if database.Collections[collection] == nil {
 					delete(database.Collections, collection)

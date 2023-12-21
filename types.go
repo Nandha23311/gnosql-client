@@ -1,10 +1,6 @@
 package gnosql_client
 
-type MapInterface map[string]interface{}
-
-type MapString map[string]string
-
-type MapStrings map[string][]string
+type ReqBody map[string]interface{}
 
 // Collection Types
 type Collection struct {
@@ -16,6 +12,10 @@ type Collection struct {
 type CollectionInput struct {
 	CollectionName string
 	IndexKeys      []string
+}
+
+type CollectionDeleteInput struct {
+	Collections []string
 }
 
 type CollectionStats struct {
@@ -93,6 +93,7 @@ type DocumentFilterResult struct {
 	Data  []Document // List of documents [Document, Document...]
 	Error string
 }
+type DocumentFilterQuery map[string]interface{}
 
 type DocumentDeleteResult struct {
 	Data  string // Data : document deleted succesfully
