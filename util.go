@@ -1,4 +1,4 @@
-package main
+package gnosql_client
 
 import (
 	"fmt"
