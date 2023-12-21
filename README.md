@@ -2,6 +2,8 @@
 
 Gnosql Client is a Go library that provides a client for interacting with the Gnosql in-memory database. It simplifies the process of managing connections, executing queries, and working with data in a Gnosql database.
 
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 ## Features
 
 -   **Connection Management:** Easily connect to a Gnosql in-memory database.
