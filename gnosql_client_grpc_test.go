@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	ADDRESS = "localhost:50051"
+	ADDRESS = "localhost:5455"
 )
 
 func TestGnoSQLGRPC(t *testing.T) {
@@ -59,6 +59,56 @@ func TestGnoSQLGRPC(t *testing.T) {
 
 		var GetCollectionStatsResult2, _ = db.GetCollectionStats(userCollectionName)
 		fmt.Printf("\n GetCollectionStatsResult2 %v \n", GetCollectionStatsResult2)
+
+		var userCollection *Collection = db.Collections[userCollectionName]
+
+		if userCollection != nil {
+
+			user1 := make(Document)
+			user1["name"] = "Nandakumar"
+			user1["city"] = "Chennai"
+			user1["pincode"] = "600100"
+
+			var DocumentCreateResult, _ = userCollection.Create(user1)
+			fmt.Printf("\n DocumentCreateResult %v \n", DocumentCreateResult)
+
+			var id = DocumentCreateResult.Data["id"].(string)
+
+			var DocumentReadResult, _ = userCollection.Read(id)
+			fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
+
+			user2 := make(Document)
+			user2["name"] = "kumar"
+			user2["city"] = "Chennai"
+			user2["pincode"] = "600101"
+
+			var DocumentCreateResult2, _ = userCollection.Create(user2)
+			fmt.Printf("\n DocumentCreateResult2 %v \n", DocumentCreateResult2)
+
+			var filter DocumentFilterQuery = DocumentFilterQuery{
+				"name": "Nandakumar",
+			}
+
+			var DocumentFilterResult, _ = userCollection.Filter(filter)
+			fmt.Printf("\n DocumentFilterResult %v \n", DocumentFilterResult)
+
+			user1["designation"] = "developer"
+
+			var DocumentUpdateResult, _ = userCollection.Update(id, user1)
+			fmt.Printf("\n DocumentUpdateResult %v \n", DocumentUpdateResult)
+
+			var DocumentReadResult3, _ = userCollection.Read(id)
+			fmt.Printf("\n DocumentReadResult3 %v \n", DocumentReadResult3)
+
+			var DocumentDeleteResult, _ = userCollection.Delete(id)
+			fmt.Printf("\n DocumentDeleteResult %v \n", DocumentDeleteResult)
+
+			var DocumentReadResult4, _ = userCollection.Read(id)
+			fmt.Printf("\n DocumentReadResult4 %v \n", DocumentReadResult4)
+
+		} else {
+			println("User collection nil")
+		}
 
 	}
 

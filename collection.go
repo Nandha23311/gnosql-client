@@ -54,17 +54,20 @@ func (database *Database) CreateCollections(collections []CollectionInput) (Coll
 
 	}
 
-	if error != nil {
+	if error == nil {
 		for _, collection := range collections {
 			collName := collection.CollectionName
+
 			if database.Collections[collName] == nil {
-				collectionInstance := Collection{
+				collectionInstance := &Collection{
 					CollectionName: collName,
 					URI:            database.URI,
 					DBName:         database.DBName,
+					IsgRPC:         database.IsgRPC,
+					ClientgRPC:     database.ClientgRPC,
 				}
 
-				database.Collections[collName] = &collectionInstance
+				database.Collections[collName] = collectionInstance
 			}
 		}
 	}

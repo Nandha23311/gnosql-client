@@ -81,14 +81,31 @@ func (client *Client) Create(databaseName string, collections []CollectionInput)
 	}
 
 	if error == nil {
-		database := Database{
+		database := &Database{
 			DBName:      databaseName,
 			URI:         client.URI,
 			IsgRPC:      client.IsgRPC,
 			ClientgRPC:  client.ClientgRPC,
 			Collections: make(map[string]*Collection),
 		}
-		client.DB[databaseName] = &database
+
+		client.DB[databaseName] = database
+
+		for _, collection := range collections {
+			collName := collection.CollectionName
+
+			if database.Collections[collName] == nil {
+				collectionInstance := &Collection{
+					CollectionName: collName,
+					URI:            database.URI,
+					DBName:         database.DBName,
+					IsgRPC:         database.IsgRPC,
+					ClientgRPC:     database.ClientgRPC,
+				}
+
+				database.Collections[collName] = collectionInstance
+			}
+		}
 	}
 
 	return result, nil

@@ -11,6 +11,8 @@ type Collection struct {
 	URI            string
 	CollectionName string
 	DBName         string
+	IsgRPC         bool
+	ClientgRPC     pb.GnoSQLServiceClient
 }
 
 type CollectionInput struct {
