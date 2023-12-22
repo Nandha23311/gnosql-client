@@ -6,7 +6,7 @@ import (
 )
 
 func TestGnoSQLREST(t *testing.T) {
-	uri := "http://localhost:3000"
+	uri := "http://localhost:5454"
 	newClient := Connect(uri, false)
 
 	var DatabaseName = "test-g-c"

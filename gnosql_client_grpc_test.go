@@ -13,7 +13,7 @@ func TestGnoSQLGRPC(t *testing.T) {
 	newClient := Connect(ADDRESS, true)
 
 	var GetAllDatabaseResult, _ = newClient.GetAll()
-	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult.Data)
+	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult)
 
 	var DatabaseName = "test-g-c"
 	var userCollectionName = "users"
@@ -28,6 +28,13 @@ func TestGnoSQLGRPC(t *testing.T) {
 	var CreateDatabaseResult, _ = newClient.Create(DatabaseName, collectionsInput1)
 
 	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
+
+	var CreateDatabaseResult2, _ = newClient.Create(DatabaseName, collectionsInput1)
+
+	fmt.Printf("\n CreateDatabaseResult2 %v \n", CreateDatabaseResult2)
+
+	var GetAllDatabaseResult2, _ = newClient.GetAll()
+	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult2)
 
 	// // ------------------------------------------------------------------------------// ------------------------------------------------------------------------------
 
@@ -71,6 +78,9 @@ func TestGnoSQLGRPC(t *testing.T) {
 
 			var DocumentCreateResult, _ = userCollection.Create(user1)
 			fmt.Printf("\n DocumentCreateResult %v \n", DocumentCreateResult)
+
+			var GetCollectionStatsResult3, _ = db.GetCollectionStats(userCollectionName)
+			fmt.Printf("\n GetCollectionStatsResult3 %v \n", GetCollectionStatsResult3)
 
 			var id = DocumentCreateResult.Data["id"].(string)
 
