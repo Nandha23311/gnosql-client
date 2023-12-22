@@ -1,5 +1,9 @@
 package gnosql_client
 
+import (
+	pb "github.com/nanda03dev/gnosql_client/proto"
+)
+
 type ReqBody map[string]interface{}
 
 // Collection Types
@@ -21,7 +25,7 @@ type CollectionDeleteInput struct {
 type CollectionStats struct {
 	CollectionName string
 	IndexKeys      []string
-	Documents      int
+	Documents      int32
 }
 
 type CollectionStatsResult struct {
@@ -49,6 +53,8 @@ type CollectionDeleteResult struct {
 type Database struct {
 	URI         string
 	DBName      string
+	IsgRPC      bool
+	ClientgRPC  pb.GnoSQLServiceClient
 	Collections map[string]*Collection
 }
 
