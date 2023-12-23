@@ -82,39 +82,42 @@ func TestGnoSQLGRPC(t *testing.T) {
 			var GetCollectionStatsResult3, _ = db.GetCollectionStats(userCollectionName)
 			fmt.Printf("\n GetCollectionStatsResult3 %v \n", GetCollectionStatsResult3)
 
-			var id = DocumentCreateResult.Data["id"].(string)
+			if _, exists := DocumentCreateResult.Data["id"]; exists {
 
-			var DocumentReadResult, _ = userCollection.Read(id)
-			fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
+				var id = DocumentCreateResult.Data["id"].(string)
 
-			user2 := make(Document)
-			user2["name"] = "kumar"
-			user2["city"] = "Chennai"
-			user2["pincode"] = "600101"
+				var DocumentReadResult, _ = userCollection.Read(id)
+				fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
 
-			var DocumentCreateResult2, _ = userCollection.Create(user2)
-			fmt.Printf("\n DocumentCreateResult2 %v \n", DocumentCreateResult2)
+				user2 := make(Document)
+				user2["name"] = "kumar"
+				user2["city"] = "Chennai"
+				user2["pincode"] = "600101"
 
-			var filter DocumentFilterQuery = DocumentFilterQuery{
-				"name": "Nandakumar",
+				var DocumentCreateResult2, _ = userCollection.Create(user2)
+				fmt.Printf("\n DocumentCreateResult2 %v \n", DocumentCreateResult2)
+
+				var filter DocumentFilterQuery = DocumentFilterQuery{
+					"name": "Nandakumar",
+				}
+
+				var DocumentFilterResult, _ = userCollection.Filter(filter)
+				fmt.Printf("\n DocumentFilterResult %v \n", DocumentFilterResult)
+
+				user1["designation"] = "developer"
+
+				var DocumentUpdateResult, _ = userCollection.Update(id, user1)
+				fmt.Printf("\n DocumentUpdateResult %v \n", DocumentUpdateResult)
+
+				var DocumentReadResult3, _ = userCollection.Read(id)
+				fmt.Printf("\n DocumentReadResult3 %v \n", DocumentReadResult3)
+
+				var DocumentDeleteResult, _ = userCollection.Delete(id)
+				fmt.Printf("\n DocumentDeleteResult %v \n", DocumentDeleteResult)
+
+				var DocumentReadResult4, _ = userCollection.Read(id)
+				fmt.Printf("\n DocumentReadResult4 %v \n", DocumentReadResult4)
 			}
-
-			var DocumentFilterResult, _ = userCollection.Filter(filter)
-			fmt.Printf("\n DocumentFilterResult %v \n", DocumentFilterResult)
-
-			user1["designation"] = "developer"
-
-			var DocumentUpdateResult, _ = userCollection.Update(id, user1)
-			fmt.Printf("\n DocumentUpdateResult %v \n", DocumentUpdateResult)
-
-			var DocumentReadResult3, _ = userCollection.Read(id)
-			fmt.Printf("\n DocumentReadResult3 %v \n", DocumentReadResult3)
-
-			var DocumentDeleteResult, _ = userCollection.Delete(id)
-			fmt.Printf("\n DocumentDeleteResult %v \n", DocumentDeleteResult)
-
-			var DocumentReadResult4, _ = userCollection.Read(id)
-			fmt.Printf("\n DocumentReadResult4 %v \n", DocumentReadResult4)
 
 		} else {
 			println("User collection nil")

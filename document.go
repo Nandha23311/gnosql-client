@@ -37,6 +37,7 @@ func (collection *Collection) Create(document Document) (DocumentCreateResult, e
 		res, _ := gRPC.CreateDocument(ctx, requestBody)
 
 		var newDocument Document
+
 		var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
 		error = ValidateResponse(nil, UnMarshallErr)
