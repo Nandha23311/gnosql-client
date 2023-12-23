@@ -235,3 +235,43 @@ func (collection *Collection) Delete(id string) (DocumentDeleteResult, error) {
 	}
 	return result, error
 }
+
+// return { Data : Document, Error: "Error message" }, error
+func (collection *Collection) GetAll() (DocumentGetAllResult, error) {
+	var result DocumentGetAllResult
+	var error error = nil
+
+	requestBody := &pb.DocumentGetAllRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+	}
+
+	if collection.IsgRPC {
+		gRPC := collection.ClientgRPC
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+
+		res, _ := gRPC.GetAllDocuments(ctx, requestBody)
+		fmt.Printf("\n res %v \n ", res.String())
+		var newDocument []Document
+		var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
+
+		error = ValidateResponse(nil, UnMarshallErr)
+
+		result.Data = newDocument
+		result.Error = res.GetError()
+
+	} else {
+		path := fmt.Sprintf("%s/%s/%s/%s/get-all", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName)
+
+		restyResp, restyErr := resty.New().
+			R().
+			Get(path)
+
+		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
+
+		error = ValidateResponse(restyErr, UnMarshallErr)
+	}
+
+	return result, error
+}

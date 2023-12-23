@@ -117,6 +117,9 @@ func TestGnoSQLGRPC(t *testing.T) {
 
 				var DocumentReadResult4, _ = userCollection.Read(id)
 				fmt.Printf("\n DocumentReadResult4 %v \n", DocumentReadResult4)
+
+				var DocumentGetAllResult, _ = userCollection.GetAll()
+				fmt.Printf("\n DocumentGetAllResult %v \n", DocumentGetAllResult)
 			}
 
 		} else {

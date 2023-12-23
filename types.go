@@ -107,3 +107,9 @@ type DocumentDeleteResult struct {
 	Data  string // Data : document deleted succesfully
 	Error string
 }
+
+
+type DocumentGetAllResult struct {
+	Data  []Document // List of documents [Document, Document...]
+	Error string
+}
