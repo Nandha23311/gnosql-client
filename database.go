@@ -1,45 +1,26 @@
 package gnosql_client
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"time"
-
-	"github.com/go-resty/resty/v2"
 	pb "github.com/nanda03dev/gnosql_client/proto"
 )
 
 // return { Data : [DatabaseName1, DatabaseName2...], Error: "Error message" }, error
-func (client *Client) GetAll() (DatabaseGetAllResult, error) {
-	var result DatabaseGetAllResult
+func (client *Client) GetAll() DatabaseGetAllResult {
+	var result = DatabaseGetAllResult{}
 
 	if client.IsgRPC {
-		gRPC := client.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.GetAllDatabases(ctx, &pb.NoRequestBody{})
-
-		result.Data = res.GetData()
-		result.Error = res.GetError()
-		return result, nil
+		result = GRPC_GetAll_DB(client)
 	} else {
-		path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseGetAll)
-
-		restyResp, restyErr := resty.New().R().Get(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-		return result, ValidateResponse(restyErr, UnMarshallErr)
-
+		result = REST_GetAll_DB(client)
 	}
+
+	return result
 
 }
 
 // return { Data : "Sucess message", Error: "Error message" }, error
-func (client *Client) Create(databaseName string, collections []CollectionInput) (DatabaseCreateResult, error) {
-	var result DatabaseCreateResult
-	var error error = nil
+func (client *Client) Create(databaseName string, collections []CollectionInput) DatabaseCreateResult {
+	var result = DatabaseCreateResult{}
 
 	colls := make([]*pb.CollectionInput, 0)
 
@@ -57,97 +38,52 @@ func (client *Client) Create(databaseName string, collections []CollectionInput)
 	}
 
 	if client.IsgRPC {
-		gRPC := client.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.CreateNewDatabase(ctx, requestBody)
-
-		result.Data = res.GetData()
-		result.Error = res.GetError()
-
+		result = GRPC_Create_DB(client, requestBody)
 	} else {
-		path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseAdd)
-
-		restyResp, restyErr := resty.New().
-			R().
-			SetBody(requestBody).
-			Post(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-		error = ValidateResponse(restyErr, UnMarshallErr)
-
+		result = REST_Create_DB(client, requestBody)
 	}
 
-	if error == nil {
-		database := &Database{
-			DBName:      databaseName,
-			URI:         client.URI,
-			IsgRPC:      client.IsgRPC,
-			ClientgRPC:  client.ClientgRPC,
-			Collections: make(map[string]*Collection),
-		}
-
-		client.DB[databaseName] = database
-
-		for _, collection := range collections {
-			collName := collection.CollectionName
-
-			if database.Collections[collName] == nil {
-				collectionInstance := &Collection{
-					CollectionName: collName,
-					URI:            database.URI,
-					DBName:         database.DBName,
-					IsgRPC:         database.IsgRPC,
-					ClientgRPC:     database.ClientgRPC,
-				}
-
-				database.Collections[collName] = collectionInstance
-			}
-		}
+	if result.Error == "" {
+		db := CreateDatabaseInstance(client, databaseName)
+		CreateCollectionsInstance(db, collections)
 	}
 
-	return result, nil
+	return result
 }
 
 // return { Data : "Sucess message", Error: "Error message" }, error
-func (client *Client) Delete(databaseName string) (DatabaseDeleteResult, error) {
+func (client *Client) Delete(databaseName string) DatabaseDeleteResult {
 	var result DatabaseDeleteResult
-	var error error = nil
 
 	requestBody := &pb.DatabaseDeleteRequest{
 		DatabaseName: databaseName,
 	}
 
 	if client.IsgRPC {
-		gRPC := client.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.DeleteDatabase(ctx, requestBody)
-
-		result.Data = res.GetData()
-		result.Error = res.GetError()
+		result = GRPC_Delete_DB(client, requestBody)
 	} else {
-
-		path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseDelete)
-
-		restyResp, restyErr := resty.New().
-			R().
-			SetBody(requestBody).
-			Post(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-		error = ValidateResponse(restyErr, UnMarshallErr)
+		result = REST_Delete_DB(client, requestBody)
 	}
 
-	if error == nil {
+	if result.Error == "" {
 		if client.DB[databaseName] != nil {
 			delete(client.DB, databaseName)
 		}
 	}
 
-	return result, nil
+	return result
+}
+
+func CreateDatabaseInstance(client *Client, DatabaseName string) *Database {
+	db := &Database{
+		DBName:      DatabaseName,
+		URI:         client.URI,
+		IsgRPC:      client.IsgRPC,
+		ClientgRPC:  client.ClientgRPC,
+		Collections: make(map[string]*Collection),
+	}
+
+	client.DB[DatabaseName] = db
+
+	return db
 }

@@ -4,17 +4,27 @@ import (
 	"fmt"
 )
 
-func ValidateResponse(restyErr error, UnMarshallErr error) error {
+func ValidateResponse(restyErr error, UnMarshallErr error, gRPCErr error, gRestResponseErr string) string {
 	if restyErr != nil {
 		fmt.Printf("\n UnMarsRestyhallErr error: %v \n", restyErr)
-		return restyErr
+		return restyErr.Error()
 	}
 
 	if UnMarshallErr != nil {
 		fmt.Printf("\n UnMarshallErr error: %v \n", UnMarshallErr)
-		return UnMarshallErr
+		return UnMarshallErr.Error()
 	}
 
-	return nil
+	if gRPCErr != nil {
+		fmt.Printf("\n gRestErr error: %v \n", UnMarshallErr)
+		return gRPCErr.Error()
+	}
+
+	if gRestResponseErr != "" {
+		// fmt.Printf("\n gRestResponseErr error: %v \n", gRestResponseErr)
+		return gRestResponseErr
+	}
+
+	return ""
 
 }

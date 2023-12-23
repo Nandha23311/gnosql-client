@@ -1,19 +1,12 @@
 package gnosql_client
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"time"
-
-	"github.com/go-resty/resty/v2"
 	pb "github.com/nanda03dev/gnosql_client/proto"
 )
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (database *Database) CreateCollections(collections []CollectionInput) (CollectionCreateResult, error) {
+func (database *Database) CreateCollections(collections []CollectionInput) CollectionCreateResult {
 	var result CollectionCreateResult
-	var error error = nil
 
 	colls := make([]*pb.CollectionInput, 0)
 
@@ -31,54 +24,21 @@ func (database *Database) CreateCollections(collections []CollectionInput) (Coll
 	}
 
 	if database.IsgRPC {
-		gRPC := database.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.CreateNewCollection(ctx, requestBody)
-
-		result.Data = res.GetData()
-		result.Error = res.GetError()
-
+		result = GRPC_Create_Collections(database, requestBody)
 	} else {
-		path := fmt.Sprintf("%s/%s/%s/add", database.URI, EndpointsMap.Collection, database.DBName)
-
-		restyResp, restyErr := resty.New().
-			R().
-			SetBody(collections).
-			Post(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-		error = ValidateResponse(restyErr, UnMarshallErr)
-
+		result = REST_Create_Collections(database, collections)
 	}
 
-	if error == nil {
-		for _, collection := range collections {
-			collName := collection.CollectionName
-
-			if database.Collections[collName] == nil {
-				collectionInstance := &Collection{
-					CollectionName: collName,
-					URI:            database.URI,
-					DBName:         database.DBName,
-					IsgRPC:         database.IsgRPC,
-					ClientgRPC:     database.ClientgRPC,
-				}
-
-				database.Collections[collName] = collectionInstance
-			}
-		}
+	if result.Error == "" {
+		CreateCollectionsInstance(database, collections)
 	}
 
-	return result, nil
+	return result
 }
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (database *Database) DeleteCollections(collectionDeleteInput CollectionDeleteInput) (CollectionDeleteResult, error) {
+func (database *Database) DeleteCollections(collectionDeleteInput CollectionDeleteInput) CollectionDeleteResult {
 	var result CollectionDeleteResult
-	var error error = nil
 
 	requestBody := &pb.CollectionDeleteRequest{
 		DatabaseName: database.DBName,
@@ -86,109 +46,77 @@ func (database *Database) DeleteCollections(collectionDeleteInput CollectionDele
 	}
 
 	if database.IsgRPC {
-		gRPC := database.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.DeleteCollections(ctx, requestBody)
-
-		result.Data = res.GetData()
-		result.Error = res.GetError()
-
+		result = GRPC_Delete_Collections(database, requestBody)
 	} else {
-		path := fmt.Sprintf("%s/%s/%s/delete", database.URI, EndpointsMap.Collection, database.DBName)
-
-		restyResp, restyErr := resty.New().
-			R().
-			SetBody(collectionDeleteInput).
-			Delete(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-		error = ValidateResponse(restyErr, UnMarshallErr)
+		result = REST_Delete_Collections(database, collectionDeleteInput)
 	}
 
-	if error == nil {
-		if result.Data == "collection deleted successfully" {
-			for _, collection := range collectionDeleteInput.Collections {
-
-				if database.Collections[collection] == nil {
-					delete(database.Collections, collection)
-				}
-
-			}
+	if result.Error == "" {
+		if result.Data == COLLECTION_DELETE_SUCCESS_MSG {
+			DeleteCollectionInstances(database, collectionDeleteInput.Collections)
 		}
-
 	}
 
-	return result, nil
+	return result
 }
 
 // return { Data : [collection1, collection2...], Error: "Error message" }, error
-func (database *Database) GetAll() (CollectionGetAllResult, error) {
+func (database *Database) GetAll() CollectionGetAllResult {
 	var result CollectionGetAllResult
-	var error error = nil
 
 	requestBody := &pb.CollectionGetAllRequest{
 		DatabaseName: database.DBName,
 	}
 
 	if database.IsgRPC {
-		gRPC := database.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.GetAllCollections(ctx, requestBody)
-
-		result.Data = res.GetData()
-		result.Error = res.GetError()
-
+		result = GRPC_GetAll_Collections(database, requestBody)
 	} else {
-		path := fmt.Sprintf("%s/%s/%s/get-all", database.URI, EndpointsMap.Collection, database.DBName)
-
-		restyResp, restyErr := resty.New().R().Get(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-		error = ValidateResponse(restyErr, UnMarshallErr)
-
+		result = REST_GetAll_Collections(database)
 	}
-	return result, error
+
+	return result
 }
 
 // return { Data : { CollectionName string, IndexKeys []string, Documents int} , Error: "Error message" }, error
-func (database *Database) GetCollectionStats(collectionName string) (CollectionStatsResult, error) {
+func (database *Database) GetCollectionStats(collectionName string) CollectionStatsResult {
 	var result CollectionStatsResult
-	var error error = nil
 
 	requestBody := &pb.CollectionStatsRequest{
 		DatabaseName:   database.DBName,
 		CollectionName: collectionName,
 	}
-
 	if database.IsgRPC {
-		gRPC := database.ClientgRPC
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		res, _ := gRPC.GetCollectionStats(ctx, requestBody)
-
-		result.Data = CollectionStats{
-			CollectionName: res.GetData().GetCollectionName(),
-			IndexKeys:      res.GetData().GetIndexKeys(),
-			Documents:      res.GetData().GetDocuments(),
-		}
-		result.Error = res.GetError()
-
+		result = GRPC_Get_Collection_Stats(database, requestBody)
 	} else {
-		path := fmt.Sprintf("%s/%s/%s/%s/stats", database.URI, EndpointsMap.Collection, database.DBName, collectionName)
-
-		restyResp, restyErr := resty.New().R().Get(path)
-
-		var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-		error = ValidateResponse(restyErr, UnMarshallErr)
-
+		result = REST_GetAll_Collection_Stats(database, collectionName)
 	}
-	return result, error
+
+	return result
+}
+
+func CreateCollectionsInstance(database *Database, collections []CollectionInput) {
+
+	for _, collection := range collections {
+		collName := collection.CollectionName
+
+		if database.Collections[collName] == nil {
+			collectionInstance := &Collection{
+				CollectionName: collName,
+				URI:            database.URI,
+				DBName:         database.DBName,
+				IsgRPC:         database.IsgRPC,
+				ClientgRPC:     database.ClientgRPC,
+			}
+
+			database.Collections[collName] = collectionInstance
+		}
+	}
+}
+
+func DeleteCollectionInstances(database *Database, collections []string) {
+	for _, collection := range collections {
+		if database.Collections[collection] == nil {
+			delete(database.Collections, collection)
+		}
+	}
 }
