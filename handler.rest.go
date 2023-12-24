@@ -21,7 +21,7 @@ func REST_GetAll_DB(client *Client) DatabaseGetAllResult {
 
 }
 
-func REST_Create_DB(client *Client, requestBody interface{}) DatabaseCreateResult {
+func REST_Create_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseCreateResult {
 	var result DatabaseCreateResult
 
 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseAdd)
@@ -38,7 +38,7 @@ func REST_Create_DB(client *Client, requestBody interface{}) DatabaseCreateResul
 	return result
 }
 
-func REST_Delete_DB(client *Client, requestBody interface{}) DatabaseDeleteResult {
+func REST_Delete_DB(client *Client, requestBody DatabaseDeleteRequest) DatabaseDeleteResult {
 	var result DatabaseDeleteResult
 
 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseDelete)
@@ -55,10 +55,10 @@ func REST_Delete_DB(client *Client, requestBody interface{}) DatabaseDeleteResul
 	return result
 }
 
-func REST_Create_Collections(database *Database, requestBody interface{}) CollectionCreateResult {
+func REST_Create_Collections(database *Database, requestBody CollectionCreateRequest) CollectionCreateResult {
 	var result CollectionCreateResult
 
-	path := fmt.Sprintf("%s/%s/%s/add", database.URI, EndpointsMap.Collection, database.DBName)
+	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionAdd)
 
 	restyResp, restyErr := resty.New().
 		R().
@@ -72,15 +72,15 @@ func REST_Create_Collections(database *Database, requestBody interface{}) Collec
 	return result
 }
 
-func REST_Delete_Collections(database *Database, requestBody interface{}) CollectionDeleteResult {
+func REST_Delete_Collections(database *Database, requestBody CollectionDeleteRequest) CollectionDeleteResult {
 	var result CollectionDeleteResult
 
-	path := fmt.Sprintf("%s/%s/%s/delete", database.URI, EndpointsMap.Collection, database.DBName)
+	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionDelete)
 
 	restyResp, restyErr := resty.New().
 		R().
 		SetBody(requestBody).
-		Delete(path)
+		Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -89,12 +89,12 @@ func REST_Delete_Collections(database *Database, requestBody interface{}) Collec
 	return result
 }
 
-func REST_GetAll_Collections(database *Database) CollectionGetAllResult {
+func REST_GetAll_Collections(database *Database, requestBody CollectionGetAllRequest) CollectionGetAllResult {
 	var result CollectionGetAllResult
 
-	path := fmt.Sprintf("%s/%s/%s/get-all", database.URI, EndpointsMap.Collection, database.DBName)
+	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionGetAll)
 
-	restyResp, restyErr := resty.New().R().Get(path)
+	restyResp, restyErr := resty.New().R().SetBody(requestBody).Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -103,12 +103,12 @@ func REST_GetAll_Collections(database *Database) CollectionGetAllResult {
 	return result
 }
 
-func REST_GetAll_Collection_Stats(database *Database, collectionName string) CollectionStatsResult {
+func REST_Get_Collection_Stats(database *Database, requestBody CollectionStatsRequest) CollectionStatsResult {
 	var result CollectionStatsResult
 
-	path := fmt.Sprintf("%s/%s/%s/%s/stats", database.URI, EndpointsMap.Collection, database.DBName, collectionName)
+	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionStats)
 
-	restyResp, restyErr := resty.New().R().Get(path)
+	restyResp, restyErr := resty.New().R().SetBody(requestBody).Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -117,15 +117,15 @@ func REST_GetAll_Collection_Stats(database *Database, collectionName string) Col
 	return result
 }
 
-func REST_Create_Document(collection *Collection, document Document) DocumentCreateResult {
+func REST_Create_Document(collection *Collection, requestBody DocumentCreateRequest) DocumentCreateResult {
 
 	var result DocumentCreateResult
 
-	path := fmt.Sprintf("%s/%s/%s/%s", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName)
+	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentAdd)
 
 	restyResp, restyErr := resty.New().
 		R().
-		SetBody(document).
+		SetBody(requestBody).
 		Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
@@ -135,30 +135,14 @@ func REST_Create_Document(collection *Collection, document Document) DocumentCre
 	return result
 }
 
-func REST_Read_Document(collection *Collection, id string) DocumentReadResult {
+func REST_Read_Document(collection *Collection, requestBody DocumentReadRequest) DocumentReadResult {
 	var result DocumentReadResult
 
-	path := fmt.Sprintf("%s/%s/%s/%s/%s", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName, id)
+	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentRead)
 
 	restyResp, restyErr := resty.New().
 		R().
-		Get(path)
-
-	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
-
-	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
-
-	return result
-}
-
-func REST_Filter_Document(collection *Collection, filter DocumentFilterQuery) DocumentFilterResult {
-	var result DocumentFilterResult
-
-	path := fmt.Sprintf("%s/%s/%s/%s/filter", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName)
-
-	restyResp, restyErr := resty.New().
-		R().
-		SetBody(filter).
+		SetBody(requestBody).
 		Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
@@ -168,16 +152,33 @@ func REST_Filter_Document(collection *Collection, filter DocumentFilterQuery) Do
 	return result
 }
 
-func REST_Update_Document(collection *Collection, id string, document Document) DocumentUpdateResult {
+func REST_Filter_Document(collection *Collection, requestBody DocumentFilterRequest) DocumentFilterResult {
+	var result DocumentFilterResult
+
+	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentFilter)
+
+	restyResp, restyErr := resty.New().
+		R().
+		SetBody(requestBody).
+		Post(path)
+
+	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
+
+	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
+
+	return result
+}
+
+func REST_Update_Document(collection *Collection, requestBody DocumentUpdateRequest) DocumentUpdateResult {
 
 	var result DocumentUpdateResult
 
-	path := fmt.Sprintf("%s/%s/%s/%s/%s", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName, id)
+	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentUpdate)
 
 	restyResp, restyErr := resty.New().
 		R().
-		SetBody(document).
-		Put(path)
+		SetBody(requestBody).
+		Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -186,14 +187,15 @@ func REST_Update_Document(collection *Collection, id string, document Document) 
 	return result
 }
 
-func REST_Delete_Document(collection *Collection, id string) DocumentDeleteResult {
+func REST_Delete_Document(collection *Collection, requestBody DocumentDeleteRequest) DocumentDeleteResult {
 	var result DocumentDeleteResult
 
-	path := fmt.Sprintf("%s/%s/%s/%s/%s", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName, id)
+	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentDelete)
 
 	restyResp, restyErr := resty.New().
 		R().
-		Delete(path)
+		SetBody(requestBody).
+		Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -202,14 +204,15 @@ func REST_Delete_Document(collection *Collection, id string) DocumentDeleteResul
 	return result
 }
 
-func REST_GetAll_Document(collection *Collection) DocumentGetAllResult {
+func REST_GetAll_Document(collection *Collection, requestBody DocumentGetAllRequest) DocumentGetAllResult {
 	var result DocumentGetAllResult
 
-	path := fmt.Sprintf("%s/%s/%s/%s/get-all", collection.URI, EndpointsMap.Document, collection.DBName, collection.CollectionName)
+	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentGetAll)
 
 	restyResp, restyErr := resty.New().
 		R().
-		Get(path)
+		SetBody(requestBody).
+		Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 

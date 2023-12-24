@@ -24,13 +24,18 @@ func GRPC_GetAll_DB(client *Client) DatabaseGetAllResult {
 	return result
 }
 
-func GRPC_Create_DB(client *Client, requestBody *pb.DatabaseCreateRequest) DatabaseCreateResult {
+func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) DatabaseCreateResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = client.ClientgRPC
 
 	var result DatabaseCreateResult
+
+	requestBody := &pb.DatabaseCreateRequest{
+		DatabaseName: request.DatabaseName,
+		Collections:  ConvertToPBCollectionInput(request.Collections),
+	}
 
 	res, gRPCError := gRPC.CreateNewDatabase(ctx, requestBody)
 
@@ -40,13 +45,17 @@ func GRPC_Create_DB(client *Client, requestBody *pb.DatabaseCreateRequest) Datab
 	return result
 }
 
-func GRPC_Delete_DB(client *Client, requestBody *pb.DatabaseDeleteRequest) DatabaseDeleteResult {
+func GRPC_Delete_DB(client *Client, request DatabaseDeleteRequest) DatabaseDeleteResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = client.ClientgRPC
 
 	var result DatabaseDeleteResult
+
+	requestBody := &pb.DatabaseDeleteRequest{
+		DatabaseName: request.DatabaseName,
+	}
 
 	res, gRPCError := gRPC.DeleteDatabase(ctx, requestBody)
 
@@ -56,13 +65,17 @@ func GRPC_Delete_DB(client *Client, requestBody *pb.DatabaseDeleteRequest) Datab
 	return result
 }
 
-func GRPC_Create_Collections(database *Database, requestBody *pb.CollectionCreateRequest) CollectionCreateResult {
+func GRPC_Create_Collections(database *Database, request CollectionCreateRequest) CollectionCreateResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = database.ClientgRPC
-
 	var result CollectionCreateResult
+
+	requestBody := &pb.CollectionCreateRequest{
+		DatabaseName: request.DatabaseName,
+		Collections:  ConvertToPBCollectionInput(request.Collections),
+	}
 
 	res, gRPCError := gRPC.CreateNewCollection(ctx, requestBody)
 
@@ -72,13 +85,18 @@ func GRPC_Create_Collections(database *Database, requestBody *pb.CollectionCreat
 	return result
 }
 
-func GRPC_Delete_Collections(database *Database, requestBody *pb.CollectionDeleteRequest) CollectionDeleteResult {
+func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest) CollectionDeleteResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = database.ClientgRPC
 
 	var result CollectionDeleteResult
+
+	requestBody := &pb.CollectionDeleteRequest{
+		DatabaseName: request.DatabaseName,
+		Collections:  request.Collections,
+	}
 
 	res, gRPCError := gRPC.DeleteCollections(ctx, requestBody)
 
@@ -88,13 +106,17 @@ func GRPC_Delete_Collections(database *Database, requestBody *pb.CollectionDelet
 	return result
 }
 
-func GRPC_GetAll_Collections(database *Database, requestBody *pb.CollectionGetAllRequest) CollectionGetAllResult {
+func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest) CollectionGetAllResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = database.ClientgRPC
 
 	var result CollectionGetAllResult
+
+	requestBody := &pb.CollectionGetAllRequest{
+		DatabaseName: request.DatabaseName,
+	}
 
 	res, gRPCError := gRPC.GetAllCollections(ctx, requestBody)
 
@@ -104,13 +126,18 @@ func GRPC_GetAll_Collections(database *Database, requestBody *pb.CollectionGetAl
 	return result
 }
 
-func GRPC_Get_Collection_Stats(database *Database, requestBody *pb.CollectionStatsRequest) CollectionStatsResult {
+func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsRequest) CollectionStatsResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = database.ClientgRPC
 
 	var result CollectionStatsResult
+
+	requestBody := &pb.CollectionStatsRequest{
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
+	}
 
 	res, gRPCError := gRPC.GetCollectionStats(ctx, requestBody)
 
@@ -125,7 +152,7 @@ func GRPC_Get_Collection_Stats(database *Database, requestBody *pb.CollectionSta
 	return result
 }
 
-func GRPC_Create_Document(collection *Collection, document Document) DocumentCreateResult {
+func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest) DocumentCreateResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -133,7 +160,7 @@ func GRPC_Create_Document(collection *Collection, document Document) DocumentCre
 
 	var result DocumentCreateResult
 
-	documentData, MarshallErr := json.Marshal(document)
+	documentData, MarshallErr := json.Marshal(request.Document)
 
 	if MarshallErr != nil {
 		result.Error = ERROR_WHILE_MARSHAL_JSON
@@ -141,8 +168,8 @@ func GRPC_Create_Document(collection *Collection, document Document) DocumentCre
 	}
 
 	requestBody := &pb.DocumentCreateRequest{
-		DatabaseName:   collection.DBName,
-		CollectionName: collection.CollectionName,
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
 		Document:       string(documentData),
 	}
 
@@ -159,7 +186,7 @@ func GRPC_Create_Document(collection *Collection, document Document) DocumentCre
 	return result
 }
 
-func GRPC_Read_Document(collection *Collection, id string) DocumentReadResult {
+func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) DocumentReadResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -167,9 +194,9 @@ func GRPC_Read_Document(collection *Collection, id string) DocumentReadResult {
 	var result DocumentReadResult
 
 	requestBody := &pb.DocumentReadRequest{
-		DatabaseName:   collection.DBName,
-		CollectionName: collection.CollectionName,
-		Id:             id,
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
+		Id:             request.Id,
 	}
 
 	res, gRPCError := gRPC.ReadDocument(ctx, requestBody)
@@ -184,7 +211,7 @@ func GRPC_Read_Document(collection *Collection, id string) DocumentReadResult {
 	return result
 }
 
-func GRPC_Filter_Document(collection *Collection, filter DocumentFilterQuery) DocumentFilterResult {
+func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest) DocumentFilterResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -192,7 +219,7 @@ func GRPC_Filter_Document(collection *Collection, filter DocumentFilterQuery) Do
 
 	var result DocumentFilterResult
 
-	filterQuery, MarshallErr := json.Marshal(filter)
+	filterQuery, MarshallErr := json.Marshal(request.Filter)
 
 	if MarshallErr != nil {
 		result.Error = ERROR_WHILE_MARSHAL_JSON
@@ -200,8 +227,8 @@ func GRPC_Filter_Document(collection *Collection, filter DocumentFilterQuery) Do
 	}
 
 	requestBody := &pb.DocumentFilterRequest{
-		DatabaseName:   collection.DBName,
-		CollectionName: collection.CollectionName,
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
 		Filter:         string(filterQuery),
 	}
 
@@ -216,14 +243,14 @@ func GRPC_Filter_Document(collection *Collection, filter DocumentFilterQuery) Do
 	return result
 }
 
-func GRPC_Update_Document(collection *Collection, id string, document Document) DocumentUpdateResult {
+func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest) DocumentUpdateResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var gRPC = collection.ClientgRPC
 	var result DocumentUpdateResult
 
-	documentData, MarshallErr := json.Marshal(document)
+	documentData, MarshallErr := json.Marshal(request.Document)
 
 	if MarshallErr != nil {
 		result.Error = ERROR_WHILE_MARSHAL_JSON
@@ -231,9 +258,9 @@ func GRPC_Update_Document(collection *Collection, id string, document Document) 
 	}
 
 	requestBody := &pb.DocumentUpdateRequest{
-		DatabaseName:   collection.DBName,
-		CollectionName: collection.CollectionName,
-		Id:             id,
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
+		Id:             request.Id,
 		Document:       string(documentData),
 	}
 
@@ -250,7 +277,7 @@ func GRPC_Update_Document(collection *Collection, id string, document Document) 
 	return result
 }
 
-func GRPC_Delete_Document(collection *Collection, id string) DocumentDeleteResult {
+func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest) DocumentDeleteResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -259,9 +286,9 @@ func GRPC_Delete_Document(collection *Collection, id string) DocumentDeleteResul
 	var result DocumentDeleteResult
 
 	requestBody := &pb.DocumentDeleteRequest{
-		DatabaseName:   collection.DBName,
-		CollectionName: collection.CollectionName,
-		Id:             id,
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
+		Id:             request.Id,
 	}
 
 	res, gRPCError := gRPC.DeleteDocument(ctx, requestBody)
@@ -272,7 +299,7 @@ func GRPC_Delete_Document(collection *Collection, id string) DocumentDeleteResul
 	return result
 }
 
-func GRPC_GetAll_Document(collection *Collection) DocumentGetAllResult {
+func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest) DocumentGetAllResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -281,8 +308,8 @@ func GRPC_GetAll_Document(collection *Collection) DocumentGetAllResult {
 	var result DocumentGetAllResult
 
 	requestBody := &pb.DocumentGetAllRequest{
-		DatabaseName:   collection.DBName,
-		CollectionName: collection.CollectionName,
+		DatabaseName:   request.DatabaseName,
+		CollectionName: request.CollectionName,
 	}
 
 	res, gRPCError := gRPC.GetAllDocuments(ctx, requestBody)
@@ -294,4 +321,18 @@ func GRPC_GetAll_Document(collection *Collection) DocumentGetAllResult {
 	result.Error = ValidateResponse(nil, UnMarshallErr, gRPCError, res.GetError())
 
 	return result
+}
+
+func ConvertToPBCollectionInput(collections []CollectionInput) []*pb.CollectionInput {
+	PBCollectionsInput := make([]*pb.CollectionInput, 0)
+
+	for _, coll := range collections {
+		coll1 := &pb.CollectionInput{
+			CollectionName: coll.CollectionName,
+			IndexKeys:      coll.IndexKeys,
+		}
+		PBCollectionsInput = append(PBCollectionsInput, coll1)
+	}
+
+	return PBCollectionsInput
 }

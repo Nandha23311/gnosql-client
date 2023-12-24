@@ -1,32 +1,18 @@
 package gnosql_client
 
-import (
-	pb "github.com/nanda03dev/gnosql_client/proto"
-)
-
 // return { Data : "Success Message", Error: "Error message" }, error
 func (database *Database) CreateCollections(collections []CollectionInput) CollectionCreateResult {
 	var result CollectionCreateResult
 
-	colls := make([]*pb.CollectionInput, 0)
-
-	for _, coll := range collections {
-		coll1 := &pb.CollectionInput{
-			CollectionName: coll.CollectionName,
-			IndexKeys:      coll.IndexKeys,
-		}
-		colls = append(colls, coll1)
-	}
-
-	requestBody := &pb.CollectionCreateRequest{
+	requestBody := CollectionCreateRequest{
 		DatabaseName: database.DBName,
-		Collections:  colls,
+		Collections:  collections,
 	}
 
 	if database.IsgRPC {
 		result = GRPC_Create_Collections(database, requestBody)
 	} else {
-		result = REST_Create_Collections(database, collections)
+		result = REST_Create_Collections(database, requestBody)
 	}
 
 	if result.Error == "" {
@@ -40,7 +26,7 @@ func (database *Database) CreateCollections(collections []CollectionInput) Colle
 func (database *Database) DeleteCollections(collectionDeleteInput CollectionDeleteInput) CollectionDeleteResult {
 	var result CollectionDeleteResult
 
-	requestBody := &pb.CollectionDeleteRequest{
+	requestBody := CollectionDeleteRequest{
 		DatabaseName: database.DBName,
 		Collections:  collectionDeleteInput.Collections,
 	}
@@ -48,7 +34,7 @@ func (database *Database) DeleteCollections(collectionDeleteInput CollectionDele
 	if database.IsgRPC {
 		result = GRPC_Delete_Collections(database, requestBody)
 	} else {
-		result = REST_Delete_Collections(database, collectionDeleteInput)
+		result = REST_Delete_Collections(database, requestBody)
 	}
 
 	if result.Error == "" {
@@ -64,14 +50,14 @@ func (database *Database) DeleteCollections(collectionDeleteInput CollectionDele
 func (database *Database) GetAll() CollectionGetAllResult {
 	var result CollectionGetAllResult
 
-	requestBody := &pb.CollectionGetAllRequest{
+	requestBody := CollectionGetAllRequest{
 		DatabaseName: database.DBName,
 	}
 
 	if database.IsgRPC {
 		result = GRPC_GetAll_Collections(database, requestBody)
 	} else {
-		result = REST_GetAll_Collections(database)
+		result = REST_GetAll_Collections(database, requestBody)
 	}
 
 	return result
@@ -81,14 +67,14 @@ func (database *Database) GetAll() CollectionGetAllResult {
 func (database *Database) GetCollectionStats(collectionName string) CollectionStatsResult {
 	var result CollectionStatsResult
 
-	requestBody := &pb.CollectionStatsRequest{
+	requestBody := CollectionStatsRequest{
 		DatabaseName:   database.DBName,
 		CollectionName: collectionName,
 	}
 	if database.IsgRPC {
 		result = GRPC_Get_Collection_Stats(database, requestBody)
 	} else {
-		result = REST_GetAll_Collection_Stats(database, collectionName)
+		result = REST_Get_Collection_Stats(database, requestBody)
 	}
 
 	return result

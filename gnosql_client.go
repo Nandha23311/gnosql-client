@@ -8,19 +8,35 @@ import (
 )
 
 type Endpoints struct {
-	DatabaseGetAll string
-	DatabaseAdd    string
-	DatabaseDelete string
-	Collection     string
-	Document       string
+	DatabaseGetAll   string
+	DatabaseAdd      string
+	DatabaseDelete   string
+	CollectionAdd    string
+	CollectionDelete string
+	CollectionGetAll string
+	CollectionStats  string
+	DocumentAdd      string
+	DocumentDelete   string
+	DocumentRead     string
+	DocumentFilter   string
+	DocumentUpdate   string
+	DocumentGetAll   string
 }
 
 var EndpointsMap = Endpoints{
-	DatabaseGetAll: "database/get-all",
-	DatabaseAdd:    "database/add",
-	DatabaseDelete: "database/delete",
-	Collection:     "collection",
-	Document:       "document",
+	DatabaseGetAll:   "database/get-all",
+	DatabaseAdd:      "database/add",
+	DatabaseDelete:   "database/delete",
+	CollectionAdd:    "collection/add",
+	CollectionDelete: "collection/delete",
+	CollectionGetAll: "collection/get-all",
+	CollectionStats:  "collection/stats",
+	DocumentAdd:      "document/add",
+	DocumentDelete:   "document/delete",
+	DocumentRead:     "document/find",
+	DocumentFilter:   "document/filter",
+	DocumentUpdate:   "document/update",
+	DocumentGetAll:   "document/get-all",
 }
 
 type Client struct {

@@ -4,10 +4,16 @@ package gnosql_client
 func (collection *Collection) Create(document Document) DocumentCreateResult {
 	var result DocumentCreateResult
 
+	requestBody := DocumentCreateRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+		Document:       document,
+	}
+
 	if collection.IsgRPC {
-		result = GRPC_Create_Document(collection, document)
+		result = GRPC_Create_Document(collection, requestBody)
 	} else {
-		result = REST_Create_Document(collection, document)
+		result = REST_Create_Document(collection, requestBody)
 	}
 
 	return result
@@ -17,23 +23,35 @@ func (collection *Collection) Create(document Document) DocumentCreateResult {
 func (collection *Collection) Read(id string) DocumentReadResult {
 	var result DocumentReadResult
 
+	requestBody := DocumentReadRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+		Id:             id,
+	}
+
 	if collection.IsgRPC {
-		result = GRPC_Read_Document(collection, id)
+		result = GRPC_Read_Document(collection, requestBody)
 	} else {
-		result = REST_Read_Document(collection, id)
+		result = REST_Read_Document(collection, requestBody)
 	}
 
 	return result
 }
 
 // return { Data : []Document, Error: "Error message" }, error
-func (collection *Collection) Filter(filter DocumentFilterQuery) DocumentFilterResult {
+func (collection *Collection) Filter(filter MapInterface) DocumentFilterResult {
 	var result DocumentFilterResult
 
+	requestBody := DocumentFilterRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+		Filter:         filter,
+	}
+
 	if collection.IsgRPC {
-		result = GRPC_Filter_Document(collection, filter)
+		result = GRPC_Filter_Document(collection, requestBody)
 	} else {
-		result = REST_Filter_Document(collection, filter)
+		result = REST_Filter_Document(collection, requestBody)
 	}
 	return result
 }
@@ -42,10 +60,17 @@ func (collection *Collection) Filter(filter DocumentFilterQuery) DocumentFilterR
 func (collection *Collection) Update(id string, document Document) DocumentUpdateResult {
 	var result DocumentUpdateResult
 
+	requestBody := DocumentUpdateRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+		Document:       document,
+		Id:             id,
+	}
+
 	if collection.IsgRPC {
-		result = GRPC_Update_Document(collection, id, document)
+		result = GRPC_Update_Document(collection, requestBody)
 	} else {
-		result = REST_Update_Document(collection, id, document)
+		result = REST_Update_Document(collection, requestBody)
 	}
 
 	return result
@@ -55,10 +80,16 @@ func (collection *Collection) Update(id string, document Document) DocumentUpdat
 func (collection *Collection) Delete(id string) DocumentDeleteResult {
 	var result DocumentDeleteResult
 
+	requestBody := DocumentDeleteRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+		Id:             id,
+	}
+
 	if collection.IsgRPC {
-		result = GRPC_Delete_Document(collection, id)
+		result = GRPC_Delete_Document(collection, requestBody)
 	} else {
-		result = REST_Delete_Document(collection, id)
+		result = REST_Delete_Document(collection, requestBody)
 	}
 	return result
 }
@@ -67,10 +98,15 @@ func (collection *Collection) Delete(id string) DocumentDeleteResult {
 func (collection *Collection) GetAll() DocumentGetAllResult {
 	var result DocumentGetAllResult
 
+	requestBody := DocumentGetAllRequest{
+		DatabaseName:   collection.DBName,
+		CollectionName: collection.CollectionName,
+	}
+
 	if collection.IsgRPC {
-		result = GRPC_GetAll_Document(collection)
+		result = GRPC_GetAll_Document(collection, requestBody)
 	} else {
-		result = REST_GetAll_Document(collection)
+		result = REST_GetAll_Document(collection, requestBody)
 	}
 
 	return result

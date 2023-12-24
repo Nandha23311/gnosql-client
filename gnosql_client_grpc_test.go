@@ -97,7 +97,7 @@ func TestGnoSQLGRPC(t *testing.T) {
 				var DocumentCreateResult2 = userCollection.Create(user2)
 				fmt.Printf("\n DocumentCreateResult2 %v \n", DocumentCreateResult2)
 
-				var filter DocumentFilterQuery = DocumentFilterQuery{
+				var filter MapInterface = MapInterface{
 					"name": "Nandakumar",
 				}
 

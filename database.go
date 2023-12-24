@@ -1,9 +1,5 @@
 package gnosql_client
 
-import (
-	pb "github.com/nanda03dev/gnosql_client/proto"
-)
-
 // return { Data : [DatabaseName1, DatabaseName2...], Error: "Error message" }, error
 func (client *Client) GetAll() DatabaseGetAllResult {
 	var result = DatabaseGetAllResult{}
@@ -22,19 +18,9 @@ func (client *Client) GetAll() DatabaseGetAllResult {
 func (client *Client) Create(databaseName string, collections []CollectionInput) DatabaseCreateResult {
 	var result = DatabaseCreateResult{}
 
-	colls := make([]*pb.CollectionInput, 0)
-
-	for _, coll := range collections {
-		coll1 := &pb.CollectionInput{
-			CollectionName: coll.CollectionName,
-			IndexKeys:      coll.IndexKeys,
-		}
-		colls = append(colls, coll1)
-	}
-
-	requestBody := &pb.DatabaseCreateRequest{
+	requestBody := DatabaseCreateRequest{
 		DatabaseName: databaseName,
-		Collections:  colls,
+		Collections:  collections,
 	}
 
 	if client.IsgRPC {
@@ -55,7 +41,7 @@ func (client *Client) Create(databaseName string, collections []CollectionInput)
 func (client *Client) Delete(databaseName string) DatabaseDeleteResult {
 	var result DatabaseDeleteResult
 
-	requestBody := &pb.DatabaseDeleteRequest{
+	requestBody := DatabaseDeleteRequest{
 		DatabaseName: databaseName,
 	}
 

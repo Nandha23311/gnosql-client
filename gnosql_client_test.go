@@ -80,7 +80,7 @@ func TestGnoSQLREST(t *testing.T) {
 			var DocumentReadResult = userCollection.Read(id)
 			fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
 
-			var filter DocumentFilterQuery = DocumentFilterQuery{
+			var filter MapInterface = MapInterface{
 				"name": "Nandakumar",
 			}
 

@@ -5,6 +5,7 @@ import (
 )
 
 type ReqBody map[string]interface{}
+type MapInterface map[string]interface{}
 
 // Collection Types
 type Collection struct {
@@ -30,26 +31,6 @@ type CollectionStats struct {
 	Documents      int32
 }
 
-type CollectionStatsResult struct {
-	Data  CollectionStats
-	Error string
-}
-
-type CollectionCreateResult struct {
-	Data  string // Data : collection created succesfully
-	Error string
-}
-
-type CollectionGetAllResult struct {
-	Data  []string // List of collection names [collection1, collection2...]
-	Error string
-}
-
-type CollectionDeleteResult struct {
-	Data  string // Data : collection deleted succesfully
-	Error string
-}
-
 // Database Types
 
 type Database struct {
@@ -64,52 +45,139 @@ type DatabaseCreateInput struct {
 	DatabaseName string
 }
 
+type Document map[string]interface{}
+
+type DocumentFilterQuery map[string]interface{}
+
+type DatabaseCreateRequest struct {
+	DatabaseName string
+	Collections  []CollectionInput
+}
+
 type DatabaseCreateResult struct {
-	Data  string // Data : database created succesfully
+	Data  string
+	Error string
+}
+
+type DatabaseDeleteRequest struct {
+	DatabaseName string
+}
+type DatabaseDeleteResult struct {
+	Data  string
 	Error string
 }
 
 type DatabaseGetAllResult struct {
-	Data  []string // List of database names [DatabaseName1, DatabaseName2...]
+	Data  []string
 	Error string
 }
 
-type DatabaseDeleteResult struct {
-	Data  string // Data : database deleted succesfully
+type DatabaseLoadToDiskResult struct {
+	Data  string
 	Error string
 }
 
-// Document types
-type Document map[string]interface{}
+type CollectionCreateRequest struct {
+	DatabaseName string
+	Collections  []CollectionInput
+}
+
+type CollectionCreateResult struct {
+	Data  string
+	Error string
+}
+
+type CollectionDeleteRequest struct {
+	DatabaseName string
+	Collections  []string
+}
+
+type CollectionDeleteResult struct {
+	Data  string
+	Error string
+}
+
+type CollectionGetAllRequest struct {
+	DatabaseName string
+}
+
+type CollectionGetAllResult struct {
+	Data  []string
+	Error string
+}
+
+type CollectionStatsRequest struct {
+	DatabaseName   string
+	CollectionName string
+}
+
+type CollectionStatsResult struct {
+	Data  CollectionStats
+	Error string
+}
+
+type DocumentCreateRequest struct {
+	DatabaseName   string
+	CollectionName string
+	Document       Document
+}
 
 type DocumentCreateResult struct {
-	Data  Document // Data : Document
+	Data  Document
 	Error string
 }
 
-type DocumentUpdateResult struct {
-	Data  Document // Data : Document
-	Error string
+type DocumentReadRequest struct {
+	DatabaseName   string
+	CollectionName string
+	Id             string
 }
 
 type DocumentReadResult struct {
-	Data  Document // Data : Document
+	Data  Document
 	Error string
+}
+
+type DocumentFilterRequest struct {
+	DatabaseName   string
+	CollectionName string
+	Filter         MapInterface
 }
 
 type DocumentFilterResult struct {
-	Data  []Document // List of documents [Document, Document...]
+	Data  []Document
 	Error string
 }
-type DocumentFilterQuery map[string]interface{}
+
+type DocumentUpdateRequest struct {
+	DatabaseName   string
+	CollectionName string
+	Id             string
+	Document       Document
+}
+
+type DocumentUpdateResult struct {
+	Data  Document
+	Error string
+}
+
+type DocumentDeleteRequest struct {
+	DatabaseName   string
+	CollectionName string
+	Id             string
+}
 
 type DocumentDeleteResult struct {
-	Data  string // Data : document deleted succesfully
+	Data  string
 	Error string
 }
 
+type DocumentGetAllRequest struct {
+	DatabaseName   string
+	CollectionName string
+}
 
 type DocumentGetAllResult struct {
-	Data  []Document // List of documents [Document, Document...]
+	Data  []Document
 	Error string
 }
