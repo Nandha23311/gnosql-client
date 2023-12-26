@@ -1,10 +1,11 @@
 package gnosql_client
 
 import (
+	"github.com/go-resty/resty/v2"
 	pb "github.com/nanda03dev/gnosql_client/proto"
-	"log"
-
 	"google.golang.org/grpc"
+	"log"
+	"net/http"
 )
 
 type Endpoints struct {
@@ -42,8 +43,9 @@ var EndpointsMap = Endpoints{
 type Client struct {
 	URI        string // Ex: http://localhost:5454
 	IsgRPC     bool
-	ClientgRPC pb.GnoSQLServiceClient
+	GrpcClient pb.GnoSQLServiceClient
 	DB         map[string]*Database
+	RestClient *resty.Client
 }
 
 // Create new GnoSQL client,
@@ -63,7 +65,15 @@ func Connect(URI string, isgRPC bool) *Client {
 			log.Println("conected to gRPC Server")
 		}
 
-		client.ClientgRPC = pb.NewGnoSQLServiceClient(conn)
+		client.GrpcClient = pb.NewGnoSQLServiceClient(conn)
+
+	} else {
+		restClient := resty.New().SetTransport(&http.Transport{
+			MaxIdleConns:        5,
+			MaxIdleConnsPerHost: 5,
+			MaxConnsPerHost:     10,
+		})
+		client.RestClient = restClient
 
 	}
 	return client

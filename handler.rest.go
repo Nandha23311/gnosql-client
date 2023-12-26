@@ -3,7 +3,6 @@ package gnosql_client
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 )
 
 func REST_GetAll_DB(client *Client) DatabaseGetAllResult {
@@ -11,7 +10,7 @@ func REST_GetAll_DB(client *Client) DatabaseGetAllResult {
 
 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseGetAll)
 
-	restyResp, restyErr := resty.New().R().Get(path)
+	restyResp, restyErr := client.RestClient.R().Get(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -26,7 +25,7 @@ func REST_Create_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseC
 
 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseAdd)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := client.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -43,7 +42,7 @@ func REST_Delete_DB(client *Client, requestBody DatabaseDeleteRequest) DatabaseD
 
 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseDelete)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := client.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -60,7 +59,7 @@ func REST_Create_Collections(database *Database, requestBody CollectionCreateReq
 
 	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionAdd)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := database.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -77,7 +76,7 @@ func REST_Delete_Collections(database *Database, requestBody CollectionDeleteReq
 
 	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionDelete)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := database.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -94,7 +93,7 @@ func REST_GetAll_Collections(database *Database, requestBody CollectionGetAllReq
 
 	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionGetAll)
 
-	restyResp, restyErr := resty.New().R().SetBody(requestBody).Post(path)
+	restyResp, restyErr := database.RestClient.R().SetBody(requestBody).Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -108,7 +107,7 @@ func REST_Get_Collection_Stats(database *Database, requestBody CollectionStatsRe
 
 	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.CollectionStats)
 
-	restyResp, restyErr := resty.New().R().SetBody(requestBody).Post(path)
+	restyResp, restyErr := database.RestClient.R().SetBody(requestBody).Post(path)
 
 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
@@ -123,7 +122,7 @@ func REST_Create_Document(collection *Collection, requestBody DocumentCreateRequ
 
 	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentAdd)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := collection.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -140,7 +139,7 @@ func REST_Read_Document(collection *Collection, requestBody DocumentReadRequest)
 
 	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentRead)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := collection.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -157,7 +156,7 @@ func REST_Filter_Document(collection *Collection, requestBody DocumentFilterRequ
 
 	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentFilter)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := collection.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -175,7 +174,7 @@ func REST_Update_Document(collection *Collection, requestBody DocumentUpdateRequ
 
 	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentUpdate)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := collection.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -192,7 +191,7 @@ func REST_Delete_Document(collection *Collection, requestBody DocumentDeleteRequ
 
 	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentDelete)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := collection.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
@@ -209,7 +208,7 @@ func REST_GetAll_Document(collection *Collection, requestBody DocumentGetAllRequ
 
 	path := fmt.Sprintf("%s/%s", collection.URI, EndpointsMap.DocumentGetAll)
 
-	restyResp, restyErr := resty.New().
+	restyResp, restyErr := collection.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)

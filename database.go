@@ -65,7 +65,8 @@ func CreateDatabaseInstance(client *Client, DatabaseName string) *Database {
 		DBName:      DatabaseName,
 		URI:         client.URI,
 		IsgRPC:      client.IsgRPC,
-		ClientgRPC:  client.ClientgRPC,
+		GrpcClient:  client.GrpcClient,
+		RestClient:  client.RestClient,
 		Collections: make(map[string]*Collection),
 	}
 

@@ -12,7 +12,7 @@ func GRPC_GetAll_DB(client *Client) DatabaseGetAllResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = client.ClientgRPC
+	var gRPC = client.GrpcClient
 
 	var result DatabaseGetAllResult
 
@@ -28,7 +28,7 @@ func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) DatabaseCreat
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = client.ClientgRPC
+	var gRPC = client.GrpcClient
 
 	var result DatabaseCreateResult
 
@@ -49,7 +49,7 @@ func GRPC_Delete_DB(client *Client, request DatabaseDeleteRequest) DatabaseDelet
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = client.ClientgRPC
+	var gRPC = client.GrpcClient
 
 	var result DatabaseDeleteResult
 
@@ -69,7 +69,7 @@ func GRPC_Create_Collections(database *Database, request CollectionCreateRequest
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = database.ClientgRPC
+	var gRPC = database.GrpcClient
 	var result CollectionCreateResult
 
 	requestBody := &pb.CollectionCreateRequest{
@@ -89,7 +89,7 @@ func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = database.ClientgRPC
+	var gRPC = database.GrpcClient
 
 	var result CollectionDeleteResult
 
@@ -110,7 +110,7 @@ func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = database.ClientgRPC
+	var gRPC = database.GrpcClient
 
 	var result CollectionGetAllResult
 
@@ -130,7 +130,7 @@ func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsReques
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = database.ClientgRPC
+	var gRPC = database.GrpcClient
 
 	var result CollectionStatsResult
 
@@ -156,7 +156,7 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = collection.ClientgRPC
+	var gRPC = collection.GrpcClient
 
 	var result DocumentCreateResult
 
@@ -190,7 +190,7 @@ func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) Doc
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = collection.ClientgRPC
+	var gRPC = collection.GrpcClient
 	var result DocumentReadResult
 
 	requestBody := &pb.DocumentReadRequest{
@@ -215,7 +215,7 @@ func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = collection.ClientgRPC
+	var gRPC = collection.GrpcClient
 
 	var result DocumentFilterResult
 
@@ -247,7 +247,7 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = collection.ClientgRPC
+	var gRPC = collection.GrpcClient
 	var result DocumentUpdateResult
 
 	documentData, MarshallErr := json.Marshal(request.Document)
@@ -281,7 +281,7 @@ func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = collection.ClientgRPC
+	var gRPC = collection.GrpcClient
 
 	var result DocumentDeleteResult
 
@@ -303,7 +303,7 @@ func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = collection.ClientgRPC
+	var gRPC = collection.GrpcClient
 
 	var result DocumentGetAllResult
 

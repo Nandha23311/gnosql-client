@@ -91,7 +91,8 @@ func CreateCollectionsInstance(database *Database, collections []CollectionInput
 				URI:            database.URI,
 				DBName:         database.DBName,
 				IsgRPC:         database.IsgRPC,
-				ClientgRPC:     database.ClientgRPC,
+				GrpcClient:     database.GrpcClient,
+				RestClient:     database.RestClient,
 			}
 
 			database.Collections[collName] = collectionInstance

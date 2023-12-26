@@ -1,6 +1,7 @@
 package gnosql_client
 
 import (
+	"github.com/go-resty/resty/v2"
 	pb "github.com/nanda03dev/gnosql_client/proto"
 )
 
@@ -13,7 +14,8 @@ type Collection struct {
 	CollectionName string
 	DBName         string
 	IsgRPC         bool
-	ClientgRPC     pb.GnoSQLServiceClient
+	GrpcClient     pb.GnoSQLServiceClient
+	RestClient     *resty.Client
 }
 
 type CollectionInput struct {
@@ -37,8 +39,9 @@ type Database struct {
 	URI         string
 	DBName      string
 	IsgRPC      bool
-	ClientgRPC  pb.GnoSQLServiceClient
+	GrpcClient  pb.GnoSQLServiceClient
 	Collections map[string]*Collection
+	RestClient  *resty.Client
 }
 
 type DatabaseCreateInput struct {
