@@ -1,7 +1,7 @@
 package gnosql_client
 
 // return { Data : [DatabaseName1, DatabaseName2...], Error: "Error message" }, error
-func (client *Client) GetAll() DatabaseGetAllResult {
+func (client *Client) GetAllDatabase() DatabaseGetAllResult {
 	var result = DatabaseGetAllResult{}
 
 	if client.IsgRPC {
@@ -15,7 +15,7 @@ func (client *Client) GetAll() DatabaseGetAllResult {
 }
 
 // return { Data : "Sucess message", Error: "Error message" }, error
-func (client *Client) Create(databaseName string, collections []CollectionInput) DatabaseCreateResult {
+func (client *Client) Connect(databaseName string, collections []CollectionInput) DatabaseCreateResult {
 	var result = DatabaseCreateResult{}
 
 	requestBody := DatabaseCreateRequest{

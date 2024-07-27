@@ -18,10 +18,10 @@ func TestGnoSQLREST(t *testing.T) {
 	}
 	collectionsInput1 := []CollectionInput{UserCollectionInput}
 
-	var CreateDatabaseResult = newClient.Create(DatabaseName, collectionsInput1)
+	var CreateDatabaseResult = newClient.Connect(DatabaseName, collectionsInput1)
 	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
 
-	var GetAllDatabaseResult = newClient.GetAll()
+	var GetAllDatabaseResult = newClient.GetAllDatabase()
 	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult.Data)
 
 	var db *Database = newClient.DB[DatabaseName]

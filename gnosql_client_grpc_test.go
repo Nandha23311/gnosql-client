@@ -12,7 +12,7 @@ const (
 func TestGnoSQLGRPC(t *testing.T) {
 	newClient := Connect(ADDRESS, true)
 
-	var GetAllDatabaseResult = newClient.GetAll()
+	var GetAllDatabaseResult = newClient.GetAllDatabase()
 	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult)
 
 	var DatabaseName = "test-g-c"
@@ -25,15 +25,16 @@ func TestGnoSQLGRPC(t *testing.T) {
 	}
 	collectionsInput1 := []CollectionInput{UserCollectionInput}
 
-	var CreateDatabaseResult = newClient.Create(DatabaseName, collectionsInput1)
+	// TODO: create connection to existing database
+	var CreateDatabaseResult = newClient.Connect(DatabaseName, collectionsInput1)
 
 	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
 
-	var CreateDatabaseResult2 = newClient.Create(DatabaseName, collectionsInput1)
+	var CreateDatabaseResult2 = newClient.Connect(DatabaseName, collectionsInput1)
 
 	fmt.Printf("\n CreateDatabaseResult2 %v \n", CreateDatabaseResult2)
 
-	var GetAllDatabaseResult2 = newClient.GetAll()
+	var GetAllDatabaseResult2 = newClient.GetAllDatabase()
 	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult2)
 
 	// // ------------------------------------------------------------------------------// ------------------------------------------------------------------------------
