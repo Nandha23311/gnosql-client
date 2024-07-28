@@ -11,6 +11,7 @@ import (
 type Endpoints struct {
 	DatabaseGetAll   string
 	DatabaseAdd      string
+	DatabaseConnect  string
 	DatabaseDelete   string
 	CollectionAdd    string
 	CollectionDelete string
@@ -27,6 +28,7 @@ type Endpoints struct {
 var EndpointsMap = Endpoints{
 	DatabaseGetAll:   "database/get-all",
 	DatabaseAdd:      "database/add",
+	DatabaseConnect:  "database/connect",
 	DatabaseDelete:   "database/delete",
 	CollectionAdd:    "collection/add",
 	CollectionDelete: "collection/delete",

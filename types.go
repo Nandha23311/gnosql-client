@@ -67,6 +67,16 @@ type DatabaseCreateResult struct {
 	Error string `json:"error"`
 }
 
+type DatabaseResult struct {
+	DatabaseName string   `json:"databaseName"`
+	Collections  []string `json:"collections"`
+}
+
+type DatabaseConnectResult struct {
+	Data  DatabaseResult `json:"data"`
+	Error string         `json:"error"`
+}
+
 type DatabaseDeleteRequest struct {
 	DatabaseName string `json:"databaseName"`
 }

@@ -37,6 +37,23 @@ func REST_Create_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseC
 	return result
 }
 
+func REST_Connect_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseConnectResult {
+	var result DatabaseConnectResult
+
+	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseConnect)
+
+	restyResp, restyErr := client.RestClient.
+		R().
+		SetBody(requestBody).
+		Post(path)
+
+	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
+
+	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
+
+	return result
+}
+
 func REST_Delete_DB(client *Client, requestBody DatabaseDeleteRequest) DatabaseDeleteResult {
 	var result DatabaseDeleteResult
 

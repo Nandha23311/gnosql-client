@@ -16,7 +16,13 @@ func (database *Database) CreateCollections(collections []CollectionInput) Colle
 	}
 
 	if result.Error == "" {
-		CreateCollectionsInstance(database, collections)
+		var collectionNames []string
+
+		for _, collection := range collections {
+			collectionNames = append(collectionNames, collection.CollectionName)
+		}
+
+		CreateCollectionsInstance(database, collectionNames)
 	}
 
 	return result
@@ -80,14 +86,13 @@ func (database *Database) GetCollectionStats(collectionName string) CollectionSt
 	return result
 }
 
-func CreateCollectionsInstance(database *Database, collections []CollectionInput) {
+func CreateCollectionsInstance(database *Database, collectionNames []string) {
 
-	for _, collection := range collections {
-		collName := collection.CollectionName
+	for _, collectionName := range collectionNames {
 
-		if database.Collections[collName] == nil {
+		if database.Collections[collectionName] == nil {
 			collectionInstance := &Collection{
-				CollectionName: collName,
+				CollectionName: collectionName,
 				URI:            database.URI,
 				DBName:         database.DBName,
 				IsgRPC:         database.IsgRPC,
@@ -95,7 +100,7 @@ func CreateCollectionsInstance(database *Database, collections []CollectionInput
 				RestClient:     database.RestClient,
 			}
 
-			database.Collections[collName] = collectionInstance
+			database.Collections[collectionName] = collectionInstance
 		}
 	}
 }

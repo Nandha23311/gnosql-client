@@ -15,7 +15,7 @@ func (client *Client) GetAllDatabase() DatabaseGetAllResult {
 }
 
 // return { Data : "Sucess message", Error: "Error message" }, error
-func (client *Client) Connect(databaseName string, collections []CollectionInput) DatabaseCreateResult {
+func (client *Client) Create(databaseName string, collections []CollectionInput) DatabaseCreateResult {
 	var result = DatabaseCreateResult{}
 
 	requestBody := DatabaseCreateRequest{
@@ -31,7 +31,36 @@ func (client *Client) Connect(databaseName string, collections []CollectionInput
 
 	if result.Error == "" {
 		db := CreateDatabaseInstance(client, databaseName)
-		CreateCollectionsInstance(db, collections)
+
+		var collectionNames []string
+		for _, collection := range collections {
+			collectionNames = append(collectionNames, collection.CollectionName)
+		}
+
+		CreateCollectionsInstance(db, collectionNames)
+	}
+
+	return result
+}
+
+// return { Data : "Sucess message", Error: "Error message" }, error
+func (client *Client) Connect(databaseName string, collections []CollectionInput) DatabaseConnectResult {
+	var result = DatabaseConnectResult{}
+
+	requestBody := DatabaseCreateRequest{
+		DatabaseName: databaseName,
+		Collections:  collections,
+	}
+
+	if client.IsgRPC {
+		result = GRPC_Connect_DB(client, requestBody)
+	} else {
+		result = REST_Connect_DB(client, requestBody)
+	}
+
+	if result.Error == "" {
+		db := CreateDatabaseInstance(client, databaseName)
+		CreateCollectionsInstance(db, result.Data.Collections)
 	}
 
 	return result
