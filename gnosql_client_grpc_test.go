@@ -80,9 +80,9 @@ func TestGnoSQLGRPC(t *testing.T) {
 		var GetCollectionStatsResult3 = db.GetCollectionStats(userCollectionName)
 		fmt.Printf("\n GetCollectionStatsResult3 %v \n", GetCollectionStatsResult3)
 
-		if _, exists := DocumentCreateResult.Data["id"]; exists {
+		if _, exists := DocumentCreateResult.Data["docId"]; exists {
 
-			var id = DocumentCreateResult.Data["id"].(string)
+			var id = DocumentCreateResult.Data["docId"].(string)
 
 			var DocumentReadResult = userCollection.Read(id)
 			fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)

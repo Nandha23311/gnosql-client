@@ -74,7 +74,7 @@ func TestGnoSQLREST(t *testing.T) {
 		var DocumentCreateResult2 = userCollection.Create(user2)
 		fmt.Printf("\n DocumentCreateResult2 %v \n", DocumentCreateResult2)
 
-		var id = DocumentCreateResult.Data["id"].(string)
+		var id = DocumentCreateResult.Data["docId"].(string)
 
 		var DocumentReadResult = userCollection.Read(id)
 		fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
