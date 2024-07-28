@@ -45,6 +45,31 @@ func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) DatabaseCreat
 	return result
 }
 
+func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) DatabaseConnectResult {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	var gRPC = client.GrpcClient
+
+	var result DatabaseConnectResult
+
+	requestBody := &pb.DatabaseCreateRequest{
+		DatabaseName: request.DatabaseName,
+		Collections:  ConvertToPBCollectionInput(request.Collections),
+	}
+
+	res, gRPCError := gRPC.ConnectDatabase(ctx, requestBody)
+	resultData := res.GetData()
+
+	result.Data = DatabaseResult{
+		DatabaseName: resultData.DatabaseName,
+		Collections:  resultData.Collections,
+	}
+	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+
+	return result
+}
+
 func GRPC_Delete_DB(client *Client, request DatabaseDeleteRequest) DatabaseDeleteResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
