@@ -17,12 +17,14 @@ func (database *Database) CreateCollections(collections []CollectionInput) Colle
 
 	if result.Error == "" {
 		var collectionNames []string
+		var collectionsResult CollectionGetAllResult = database.GetAll()
 
-		for _, collection := range collections {
-			collectionNames = append(collectionNames, collection.CollectionName)
+		if collectionsResult.Error == "" {
+			collectionNames = append(collectionNames, collectionsResult.Data...)
+
+			CreateCollectionsInstance(database, collectionNames)
 		}
 
-		CreateCollectionsInstance(database, collectionNames)
 	}
 
 	return result

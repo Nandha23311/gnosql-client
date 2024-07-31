@@ -6,16 +6,14 @@ import (
 )
 
 const (
-	ADDRESS = "localhost:5455"
+	GRPC_URI = "localhost:5455"
 )
 
 func TestGnoSQLGRPC(t *testing.T) {
-	newClient := Connect(ADDRESS, true)
-
-	var GetAllDatabaseResult = newClient.GetAllDatabase()
-	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult)
-
 	var DatabaseName = "test-g-c"
+
+	db := Connect(GRPC_URI, DatabaseName, true)
+
 	var userCollectionName = "users"
 	var orderCollectionName = "orders"
 
@@ -23,22 +21,11 @@ func TestGnoSQLGRPC(t *testing.T) {
 		CollectionName: userCollectionName,
 		IndexKeys:      []string{"city", "pincode"},
 	}
+
 	collectionsInput1 := []CollectionInput{UserCollectionInput}
 
-	var CreateDatabaseResult = newClient.Connect(DatabaseName, collectionsInput1)
-
-	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
-
-	var CreateDatabaseResult2 = newClient.Connect(DatabaseName, collectionsInput1)
-
-	fmt.Printf("\n CreateDatabaseResult2 %v \n", CreateDatabaseResult2)
-
-	var GetAllDatabaseResult2 = newClient.GetAllDatabase()
-	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult2)
-
-	// // ------------------------------------------------------------------------------// ------------------------------------------------------------------------------
-
-	var db *Database = newClient.DB[DatabaseName]
+	var CreateCollectionResult1 = db.CreateCollections(collectionsInput1)
+	fmt.Printf("\n CreateCollectionResult1 %v \n", CreateCollectionResult1)
 
 	OrderCollectionInput := CollectionInput{
 		CollectionName: orderCollectionName,
@@ -82,9 +69,9 @@ func TestGnoSQLGRPC(t *testing.T) {
 
 		if _, exists := DocumentCreateResult.Data["docId"]; exists {
 
-			var id = DocumentCreateResult.Data["docId"].(string)
+			var docId = DocumentCreateResult.Data["docId"].(string)
 
-			var DocumentReadResult = userCollection.Read(id)
+			var DocumentReadResult = userCollection.Read(docId)
 			fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
 
 			user2 := make(Document)
@@ -104,16 +91,16 @@ func TestGnoSQLGRPC(t *testing.T) {
 
 			user1["designation"] = "developer"
 
-			var DocumentUpdateResult = userCollection.Update(id, user1)
+			var DocumentUpdateResult = userCollection.Update(docId, user1)
 			fmt.Printf("\n DocumentUpdateResult %v \n", DocumentUpdateResult)
 
-			var DocumentReadResult3 = userCollection.Read(id)
+			var DocumentReadResult3 = userCollection.Read(docId)
 			fmt.Printf("\n DocumentReadResult3 %v \n", DocumentReadResult3)
 
-			var DocumentDeleteResult = userCollection.Delete(id)
+			var DocumentDeleteResult = userCollection.Delete(docId)
 			fmt.Printf("\n DocumentDeleteResult %v \n", DocumentDeleteResult)
 
-			var DocumentReadResult4 = userCollection.Read(id)
+			var DocumentReadResult4 = userCollection.Read(docId)
 			fmt.Printf("\n DocumentReadResult4 %v \n", DocumentReadResult4)
 
 			var DocumentGetAllResult = userCollection.GetAll()
@@ -125,6 +112,6 @@ func TestGnoSQLGRPC(t *testing.T) {
 	}
 
 	// ------------------------------------------------------------------------------
-	var DeleteDatabaseResult = newClient.Delete(DatabaseName)
+	var DeleteDatabaseResult = db.DeleteDatabase(DatabaseName)
 	fmt.Printf("\n DeleteDatabaseResult %v ", DeleteDatabaseResult)
 }

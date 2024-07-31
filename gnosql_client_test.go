@@ -5,11 +5,16 @@ import (
 	"testing"
 )
 
+const (
+	HTTP_URI = "http://localhost:5454"
+)
+
 func TestGnoSQLREST(t *testing.T) {
-	uri := "http://localhost:5454"
-	newClient := Connect(uri, false)
 
 	var DatabaseName = "test-g-c"
+
+	db := Connect(HTTP_URI, DatabaseName, false)
+
 	var userCollectionName = "users"
 
 	UserCollectionInput := CollectionInput{
@@ -18,13 +23,8 @@ func TestGnoSQLREST(t *testing.T) {
 	}
 	collectionsInput1 := []CollectionInput{UserCollectionInput}
 
-	var CreateDatabaseResult = newClient.Connect(DatabaseName, collectionsInput1)
-	fmt.Printf("\n CreateDatabaseResult %v \n", CreateDatabaseResult)
-
-	var GetAllDatabaseResult = newClient.GetAllDatabase()
-	fmt.Printf("\n GetAllDatabaseResult %v \n", GetAllDatabaseResult.Data)
-
-	var db *Database = newClient.DB[DatabaseName]
+	var CreateCollectionResult1 = db.CreateCollections(collectionsInput1)
+	fmt.Printf("\n CreateCollectionResult1 %v \n", CreateCollectionResult1)
 
 	var orderCollectionName = "orders"
 
@@ -35,8 +35,8 @@ func TestGnoSQLREST(t *testing.T) {
 
 	collectionsInput2 := []CollectionInput{OrderCollectionInput}
 
-	var CreateCollectionResult = db.CreateCollections(collectionsInput2)
-	fmt.Printf("\n CreateCollectionResult %v \n", CreateCollectionResult)
+	var CreateCollectionResult2 = db.CreateCollections(collectionsInput2)
+	fmt.Printf("\n CreateCollectionResult %v \n", CreateCollectionResult2)
 
 	var GetCollectionsResult = db.GetAll()
 	fmt.Printf("\n GetCollectionsResult %v \n", GetCollectionsResult)
@@ -74,9 +74,9 @@ func TestGnoSQLREST(t *testing.T) {
 		var DocumentCreateResult2 = userCollection.Create(user2)
 		fmt.Printf("\n DocumentCreateResult2 %v \n", DocumentCreateResult2)
 
-		var id = DocumentCreateResult.Data["docId"].(string)
+		var docId = DocumentCreateResult.Data["docId"].(string)
 
-		var DocumentReadResult = userCollection.Read(id)
+		var DocumentReadResult = userCollection.Read(docId)
 		fmt.Printf("\n DocumentReadResult %v \n", DocumentReadResult)
 
 		var filter MapInterface = MapInterface{
@@ -88,15 +88,15 @@ func TestGnoSQLREST(t *testing.T) {
 
 		user1["designation"] = "developer"
 
-		var DocumentUpdateResult = userCollection.Update(id, user1)
+		var DocumentUpdateResult = userCollection.Update(docId, user1)
 		fmt.Printf("\n DocumentUpdateResult %v \n", DocumentUpdateResult)
 
-		var DocumentDeleteResult = userCollection.Delete(id)
+		var DocumentDeleteResult = userCollection.Delete(docId)
 		fmt.Printf("\n DocumentDeleteResult %v \n", DocumentDeleteResult)
 
 	}
 
-	var DeleteDatabaseResult = newClient.Delete(DatabaseName)
+	var DeleteDatabaseResult = db.DeleteDatabase(DatabaseName)
 	fmt.Printf("\n DeleteDatabaseResult %v ", DeleteDatabaseResult)
 
 }

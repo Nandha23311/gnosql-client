@@ -20,13 +20,13 @@ func (collection *Collection) Create(document Document) DocumentCreateResult {
 }
 
 // return { Data : Document, Error: "Error message" }, error
-func (collection *Collection) Read(id string) DocumentReadResult {
+func (collection *Collection) Read(docId string) DocumentReadResult {
 	var result DocumentReadResult
 
 	requestBody := DocumentReadRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
-		Id:             id,
+		DocId:          docId,
 	}
 
 	if collection.IsgRPC {
@@ -57,14 +57,14 @@ func (collection *Collection) Filter(filter MapInterface) DocumentFilterResult {
 }
 
 // return { Data : Document, Error: "Error message" }, error
-func (collection *Collection) Update(id string, document Document) DocumentUpdateResult {
+func (collection *Collection) Update(docId string, document Document) DocumentUpdateResult {
 	var result DocumentUpdateResult
 
 	requestBody := DocumentUpdateRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
 		Document:       document,
-		Id:             id,
+		DocId:          docId,
 	}
 
 	if collection.IsgRPC {
@@ -77,13 +77,13 @@ func (collection *Collection) Update(id string, document Document) DocumentUpdat
 }
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (collection *Collection) Delete(id string) DocumentDeleteResult {
+func (collection *Collection) Delete(docId string) DocumentDeleteResult {
 	var result DocumentDeleteResult
 
 	requestBody := DocumentDeleteRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
-		Id:             id,
+		DocId:          docId,
 	}
 
 	if collection.IsgRPC {
