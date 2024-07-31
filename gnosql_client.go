@@ -52,7 +52,7 @@ type Client struct {
 
 // Create new GnoSQL client,
 // URI string  Ex: http://localhost:5454
-func Connect(URI string, isgRPC bool) *Client {
+func Connect(URI string, databaseName string, isgRPC bool) *Database {
 	var client = &Client{
 		URI:    URI,
 		IsgRPC: isgRPC,
@@ -76,7 +76,10 @@ func Connect(URI string, isgRPC bool) *Client {
 			MaxConnsPerHost:     10,
 		})
 		client.RestClient = restClient
-
+		log.Println("conected to Http Server")
 	}
-	return client
+
+	client.Connect(databaseName, []CollectionInput{})
+
+	return client.DB[databaseName]
 }

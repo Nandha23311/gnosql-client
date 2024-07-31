@@ -70,11 +70,11 @@ func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) DatabaseConn
 	return result
 }
 
-func GRPC_Delete_DB(client *Client, request DatabaseDeleteRequest) DatabaseDeleteResult {
+func GRPC_Delete_DB(database *Database, request DatabaseDeleteRequest) DatabaseDeleteResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var gRPC = client.GrpcClient
+	var gRPC = database.GrpcClient
 
 	var result DatabaseDeleteResult
 
@@ -221,7 +221,7 @@ func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) Doc
 	requestBody := &pb.DocumentReadRequest{
 		DatabaseName:   request.DatabaseName,
 		CollectionName: request.CollectionName,
-		Id:             request.Id,
+		DocId:          request.DocId,
 	}
 
 	res, gRPCError := gRPC.ReadDocument(ctx, requestBody)
@@ -285,7 +285,7 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 	requestBody := &pb.DocumentUpdateRequest{
 		DatabaseName:   request.DatabaseName,
 		CollectionName: request.CollectionName,
-		Id:             request.Id,
+		DocId:          request.DocId,
 		Document:       string(documentData),
 	}
 
@@ -313,7 +313,7 @@ func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest)
 	requestBody := &pb.DocumentDeleteRequest{
 		DatabaseName:   request.DatabaseName,
 		CollectionName: request.CollectionName,
-		Id:             request.Id,
+		DocId:          request.DocId,
 	}
 
 	res, gRPCError := gRPC.DeleteDocument(ctx, requestBody)

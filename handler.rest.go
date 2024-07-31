@@ -5,37 +5,37 @@ import (
 	"fmt"
 )
 
-func REST_GetAll_DB(client *Client) DatabaseGetAllResult {
-	var result DatabaseGetAllResult
+// func REST_GetAll_DB(client *Client) DatabaseGetAllResult {
+// 	var result DatabaseGetAllResult
 
-	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseGetAll)
+// 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseGetAll)
 
-	restyResp, restyErr := client.RestClient.R().Get(path)
+// 	restyResp, restyErr := client.RestClient.R().Get(path)
 
-	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
+// 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
-	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
+// 	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
 
-	return result
+// 	return result
 
-}
+// }
 
-func REST_Create_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseCreateResult {
-	var result DatabaseCreateResult
+// func REST_Create_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseCreateResult {
+// 	var result DatabaseCreateResult
 
-	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseAdd)
+// 	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseAdd)
 
-	restyResp, restyErr := client.RestClient.
-		R().
-		SetBody(requestBody).
-		Post(path)
+// 	restyResp, restyErr := client.RestClient.
+// 		R().
+// 		SetBody(requestBody).
+// 		Post(path)
 
-	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
+// 	var UnMarshallErr = json.Unmarshal(restyResp.Body(), &result)
 
-	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
+// 	result.Error = ValidateResponse(restyErr, UnMarshallErr, nil, "")
 
-	return result
-}
+// 	return result
+// }
 
 func REST_Connect_DB(client *Client, requestBody DatabaseCreateRequest) DatabaseConnectResult {
 	var result DatabaseConnectResult
@@ -54,12 +54,12 @@ func REST_Connect_DB(client *Client, requestBody DatabaseCreateRequest) Database
 	return result
 }
 
-func REST_Delete_DB(client *Client, requestBody DatabaseDeleteRequest) DatabaseDeleteResult {
+func REST_Delete_DB(database *Database, requestBody DatabaseDeleteRequest) DatabaseDeleteResult {
 	var result DatabaseDeleteResult
 
-	path := fmt.Sprintf("%s/%s", client.URI, EndpointsMap.DatabaseDelete)
+	path := fmt.Sprintf("%s/%s", database.URI, EndpointsMap.DatabaseDelete)
 
-	restyResp, restyErr := client.RestClient.
+	restyResp, restyErr := database.RestClient.
 		R().
 		SetBody(requestBody).
 		Post(path)
