@@ -54,7 +54,7 @@ type DocumentFilterQuery map[string]interface{}
 
 type Result struct {
 	Data  interface{} `json:"data"`
-	Error string      `json:"error"`
+	Error error       `json:"error"`
 }
 
 type DatabaseCreateRequest struct {
@@ -64,7 +64,7 @@ type DatabaseCreateRequest struct {
 
 type DatabaseCreateResult struct {
 	Data  string `json:"data"`
-	Error string `json:"error"`
+	Error error  `json:"error"`
 }
 
 type DatabaseResult struct {
@@ -74,7 +74,7 @@ type DatabaseResult struct {
 
 type DatabaseConnectResult struct {
 	Data  DatabaseResult `json:"data"`
-	Error string         `json:"error"`
+	Error error          `json:"error"`
 }
 
 type DatabaseDeleteRequest struct {
@@ -82,17 +82,17 @@ type DatabaseDeleteRequest struct {
 }
 type DatabaseDeleteResult struct {
 	Data  string `json:"data"`
-	Error string `json:"error"`
+	Error error  `json:"error"`
 }
 
 type DatabaseGetAllResult struct {
 	Data  []string `json:"data"`
-	Error string   `json:"error"`
+	Error error    `json:"error"`
 }
 
 type DatabaseLoadToDiskResult struct {
 	Data  string `json:"data"`
-	Error string `json:"error"`
+	Error error  `json:"error"`
 }
 
 type CollectionCreateRequest struct {
@@ -102,7 +102,7 @@ type CollectionCreateRequest struct {
 
 type CollectionCreateResult struct {
 	Data  string `json:"data"`
-	Error string `json:"error"`
+	Error error  `json:"error"`
 }
 
 type CollectionDeleteRequest struct {
@@ -112,7 +112,7 @@ type CollectionDeleteRequest struct {
 
 type CollectionDeleteResult struct {
 	Data  string `json:"data"`
-	Error string `json:"error"`
+	Error error  `json:"error"`
 }
 
 type CollectionGetAllRequest struct {
@@ -121,7 +121,7 @@ type CollectionGetAllRequest struct {
 
 type CollectionGetAllResult struct {
 	Data  []string `json:"data"`
-	Error string   `json:"error"`
+	Error error    `json:"error"`
 }
 
 type CollectionStatsRequest struct {
@@ -131,7 +131,7 @@ type CollectionStatsRequest struct {
 
 type CollectionStatsResult struct {
 	Data  CollectionStats
-	Error string `json:"error"`
+	Error error `json:"error"`
 }
 
 type DocumentCreateRequest struct {
@@ -142,7 +142,7 @@ type DocumentCreateRequest struct {
 
 type DocumentCreateResult struct {
 	Data  Document `json:"data"`
-	Error string   `json:"error"`
+	Error error    `json:"error"`
 }
 
 type DocumentReadRequest struct {
@@ -153,7 +153,7 @@ type DocumentReadRequest struct {
 
 type DocumentReadResult struct {
 	Data  Document `json:"data"`
-	Error string   `json:"error"`
+	Error error    `json:"error"`
 }
 
 type DocumentFilterRequest struct {
@@ -164,7 +164,7 @@ type DocumentFilterRequest struct {
 
 type DocumentFilterResult struct {
 	Data  []Document `json:"data"`
-	Error string     `json:"error"`
+	Error error      `json:"error"`
 }
 
 type DocumentUpdateRequest struct {
@@ -176,7 +176,7 @@ type DocumentUpdateRequest struct {
 
 type DocumentUpdateResult struct {
 	Data  Document `json:"data"`
-	Error string   `json:"error"`
+	Error error    `json:"error"`
 }
 
 type DocumentDeleteRequest struct {
@@ -187,7 +187,7 @@ type DocumentDeleteRequest struct {
 
 type DocumentDeleteResult struct {
 	Data  string `json:"data"`
-	Error string `json:"error"`
+	Error error  `json:"error"`
 }
 
 type DocumentGetAllRequest struct {
@@ -197,5 +197,5 @@ type DocumentGetAllRequest struct {
 
 type DocumentGetAllResult struct {
 	Data  []Document `json:"data"`
-	Error string     `json:"error"`
+	Error error      `json:"error"`
 }

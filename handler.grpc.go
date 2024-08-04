@@ -3,6 +3,7 @@ package gnosql_client
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	pb "github.com/nanda03dev/gnosql_client/proto"
@@ -188,7 +189,7 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 	documentData, MarshallErr := json.Marshal(request.Document)
 
 	if MarshallErr != nil {
-		result.Error = ERROR_WHILE_MARSHAL_JSON
+		result.Error = errors.New(ERROR_WHILE_MARSHAL_JSON)
 		return result
 	}
 
@@ -201,7 +202,7 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 	res, gRPCError := gRPC.CreateDocument(ctx, requestBody)
 
 	var newDocument Document
-	result.Error = res.GetError()
+	result.Error = errors.New(res.GetError())
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
@@ -247,7 +248,7 @@ func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest)
 	filterQuery, MarshallErr := json.Marshal(request.Filter)
 
 	if MarshallErr != nil {
-		result.Error = ERROR_WHILE_MARSHAL_JSON
+		result.Error = errors.New(ERROR_WHILE_MARSHAL_JSON)
 		return result
 	}
 
@@ -278,7 +279,7 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 	documentData, MarshallErr := json.Marshal(request.Document)
 
 	if MarshallErr != nil {
-		result.Error = ERROR_WHILE_MARSHAL_JSON
+		result.Error = errors.New(ERROR_WHILE_MARSHAL_JSON)
 		return result
 	}
 

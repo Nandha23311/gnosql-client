@@ -15,11 +15,11 @@ func (database *Database) CreateCollections(collections []CollectionInput) Colle
 		result = REST_Create_Collections(database, requestBody)
 	}
 
-	if result.Error == "" {
+	if result.Error != nil {
 		var collectionNames []string
 		var collectionsResult CollectionGetAllResult = database.GetAll()
 
-		if collectionsResult.Error == "" {
+		if collectionsResult.Error != nil {
 			collectionNames = append(collectionNames, collectionsResult.Data...)
 
 			CreateCollectionsInstance(database, collectionNames)
@@ -45,7 +45,7 @@ func (database *Database) DeleteCollections(collectionDeleteInput CollectionDele
 		result = REST_Delete_Collections(database, requestBody)
 	}
 
-	if result.Error == "" {
+	if result.Error != nil {
 		if result.Data == COLLECTION_DELETE_SUCCESS_MSG {
 			DeleteCollectionInstances(database, collectionDeleteInput.Collections)
 		}

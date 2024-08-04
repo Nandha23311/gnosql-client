@@ -1,11 +1,12 @@
 package gnosql_client
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/go-resty/resty/v2"
 	pb "github.com/nanda03dev/gnosql_client/proto"
 	"google.golang.org/grpc"
-	"log"
-	"net/http"
 )
 
 type Endpoints struct {
@@ -64,7 +65,7 @@ func Connect(URI string, databaseName string, isgRPC bool) *Database {
 		if err != nil {
 			log.Fatalf("did not connect : %v", err)
 		} else {
-			log.Println("conected to gRPC Server")
+			log.Println("conected to GNOSQL - gRPC Server")
 		}
 
 		client.GrpcClient = pb.NewGnoSQLServiceClient(conn)

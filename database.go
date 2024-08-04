@@ -15,7 +15,8 @@ func (client *Client) Connect(databaseName string, collections []CollectionInput
 		result = REST_Connect_DB(client, requestBody)
 	}
 
-	if result.Error == "" {
+	if result.Error == nil {
+
 		db := CreateDatabaseInstance(client, databaseName)
 		CreateCollectionsInstance(db, result.Data.Collections)
 	}
