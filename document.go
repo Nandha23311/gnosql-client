@@ -10,11 +10,7 @@ func (collection *Collection) Create(document Document) DocumentCreateResult {
 		Document:       document,
 	}
 
-	if collection.IsgRPC {
-		result = GRPC_Create_Document(collection, requestBody)
-	} else {
-		result = REST_Create_Document(collection, requestBody)
-	}
+	result = GRPC_Create_Document(collection, requestBody)
 
 	return result
 }
@@ -29,11 +25,7 @@ func (collection *Collection) Read(docId string) DocumentReadResult {
 		DocId:          docId,
 	}
 
-	if collection.IsgRPC {
-		result = GRPC_Read_Document(collection, requestBody)
-	} else {
-		result = REST_Read_Document(collection, requestBody)
-	}
+	result = GRPC_Read_Document(collection, requestBody)
 
 	return result
 }
@@ -48,11 +40,8 @@ func (collection *Collection) Filter(filter MapInterface) DocumentFilterResult {
 		Filter:         filter,
 	}
 
-	if collection.IsgRPC {
-		result = GRPC_Filter_Document(collection, requestBody)
-	} else {
-		result = REST_Filter_Document(collection, requestBody)
-	}
+	result = GRPC_Filter_Document(collection, requestBody)
+
 	return result
 }
 
@@ -67,11 +56,7 @@ func (collection *Collection) Update(docId string, document Document) DocumentUp
 		DocId:          docId,
 	}
 
-	if collection.IsgRPC {
-		result = GRPC_Update_Document(collection, requestBody)
-	} else {
-		result = REST_Update_Document(collection, requestBody)
-	}
+	result = GRPC_Update_Document(collection, requestBody)
 
 	return result
 }
@@ -86,11 +71,8 @@ func (collection *Collection) Delete(docId string) DocumentDeleteResult {
 		DocId:          docId,
 	}
 
-	if collection.IsgRPC {
-		result = GRPC_Delete_Document(collection, requestBody)
-	} else {
-		result = REST_Delete_Document(collection, requestBody)
-	}
+	result = GRPC_Delete_Document(collection, requestBody)
+
 	return result
 }
 
@@ -103,11 +85,7 @@ func (collection *Collection) GetAll() DocumentGetAllResult {
 		CollectionName: collection.CollectionName,
 	}
 
-	if collection.IsgRPC {
-		result = GRPC_GetAll_Document(collection, requestBody)
-	} else {
-		result = REST_GetAll_Document(collection, requestBody)
-	}
+	result = GRPC_GetAll_Document(collection, requestBody)
 
 	return result
 }

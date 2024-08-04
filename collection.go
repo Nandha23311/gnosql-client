@@ -9,19 +9,13 @@ func (database *Database) CreateCollections(collections []CollectionInput) Colle
 		Collections:  collections,
 	}
 
-	if database.IsgRPC {
-		result = GRPC_Create_Collections(database, requestBody)
-	} else {
-		result = REST_Create_Collections(database, requestBody)
-	}
-
-	if result.Error != nil {
+	result = GRPC_Create_Collections(database, requestBody)
+	if result.Error == nil {
 		var collectionNames []string
 		var collectionsResult CollectionGetAllResult = database.GetAll()
 
-		if collectionsResult.Error != nil {
+		if collectionsResult.Error == nil {
 			collectionNames = append(collectionNames, collectionsResult.Data...)
-
 			CreateCollectionsInstance(database, collectionNames)
 		}
 
@@ -39,11 +33,7 @@ func (database *Database) DeleteCollections(collectionDeleteInput CollectionDele
 		Collections:  collectionDeleteInput.Collections,
 	}
 
-	if database.IsgRPC {
-		result = GRPC_Delete_Collections(database, requestBody)
-	} else {
-		result = REST_Delete_Collections(database, requestBody)
-	}
+	result = GRPC_Delete_Collections(database, requestBody)
 
 	if result.Error != nil {
 		if result.Data == COLLECTION_DELETE_SUCCESS_MSG {
@@ -62,12 +52,7 @@ func (database *Database) GetAll() CollectionGetAllResult {
 		DatabaseName: database.DBName,
 	}
 
-	if database.IsgRPC {
-		result = GRPC_GetAll_Collections(database, requestBody)
-	} else {
-		result = REST_GetAll_Collections(database, requestBody)
-	}
-
+	result = GRPC_GetAll_Collections(database, requestBody)
 	return result
 }
 
@@ -79,11 +64,8 @@ func (database *Database) GetCollectionStats(collectionName string) CollectionSt
 		DatabaseName:   database.DBName,
 		CollectionName: collectionName,
 	}
-	if database.IsgRPC {
-		result = GRPC_Get_Collection_Stats(database, requestBody)
-	} else {
-		result = REST_Get_Collection_Stats(database, requestBody)
-	}
+
+	result = GRPC_Get_Collection_Stats(database, requestBody)
 
 	return result
 }

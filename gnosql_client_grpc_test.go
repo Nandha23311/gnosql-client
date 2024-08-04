@@ -52,6 +52,7 @@ func TestGnoSQLGRPC(t *testing.T) {
 	var GetCollectionStatsResult2 = db.GetCollectionStats(userCollectionName)
 	fmt.Printf("\n GetCollectionStatsResult2 %v \n", GetCollectionStatsResult2)
 
+	fmt.Printf("\n db.Collections %v ", db.Collections)
 	var userCollection *Collection = db.Collections[userCollectionName]
 
 	if userCollection != nil {
