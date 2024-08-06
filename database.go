@@ -1,22 +1,21 @@
 package gnosql_client
 
 // return { Data : "Sucess message", Error: "Error message" }, error
-func (client *Client) Connect(databaseName string, collections []CollectionInput) DatabaseConnectResult {
-	var result = DatabaseConnectResult{}
+func (client *Client) Connect(databaseName string, collections []CollectionInput) (DatabaseConnectResult, error) {
 
 	requestBody := DatabaseCreateRequest{
 		DatabaseName: databaseName,
 		Collections:  collections,
 	}
 
-	result = GRPC_Connect_DB(client, requestBody)
+	result, err := GRPC_Connect_DB(client, requestBody)
 
-	if result.Error == nil {
+	if err == nil {
 		db := CreateDatabaseInstance(client, databaseName)
 		CreateCollectionsInstance(db, result.Data.Collections)
 	}
 
-	return result
+	return result, err
 }
 
 func CreateDatabaseInstance(client *Client, DatabaseName string) *Database {
@@ -33,14 +32,13 @@ func CreateDatabaseInstance(client *Client, DatabaseName string) *Database {
 }
 
 // return { Data : "Sucess message", Error: "Error message" }, error
-func (database *Database) DeleteDatabase(databaseName string) DatabaseDeleteResult {
-	var result DatabaseDeleteResult
+func (database *Database) DeleteDatabase(databaseName string) (DatabaseDeleteResult, error) {
 
 	requestBody := DatabaseDeleteRequest{
 		DatabaseName: databaseName,
 	}
 
-	result = GRPC_Delete_DB(database, requestBody)
+	result, err := GRPC_Delete_DB(database, requestBody)
 
-	return result
+	return result, err
 }

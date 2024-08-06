@@ -1,54 +1,45 @@
 package gnosql_client
 
 // return { Data : Document, Error: "Error message" }, error
-func (collection *Collection) Create(document Document) DocumentCreateResult {
-	var result DocumentCreateResult
-
+func (collection *Collection) Create(document Document) (DocumentCreateResult, error) {
 	requestBody := DocumentCreateRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
 		Document:       document,
 	}
 
-	result = GRPC_Create_Document(collection, requestBody)
-
-	return result
+	result, err := GRPC_Create_Document(collection, requestBody)
+	return result, err
 }
 
 // return { Data : Document, Error: "Error message" }, error
-func (collection *Collection) Read(docId string) DocumentReadResult {
-	var result DocumentReadResult
-
+func (collection *Collection) Read(docId string) (DocumentReadResult, error) {
 	requestBody := DocumentReadRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
 		DocId:          docId,
 	}
 
-	result = GRPC_Read_Document(collection, requestBody)
+	result, err := GRPC_Read_Document(collection, requestBody)
 
-	return result
+	return result, err
 }
 
 // return { Data : []Document, Error: "Error message" }, error
-func (collection *Collection) Filter(filter MapInterface) DocumentFilterResult {
-	var result DocumentFilterResult
-
+func (collection *Collection) Filter(filter MapInterface) (DocumentFilterResult, error) {
 	requestBody := DocumentFilterRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
 		Filter:         filter,
 	}
 
-	result = GRPC_Filter_Document(collection, requestBody)
+	result, err := GRPC_Filter_Document(collection, requestBody)
 
-	return result
+	return result, err
 }
 
 // return { Data : Document, Error: "Error message" }, error
-func (collection *Collection) Update(docId string, document Document) DocumentUpdateResult {
-	var result DocumentUpdateResult
-
+func (collection *Collection) Update(docId string, document Document) (DocumentUpdateResult, error) {
 	requestBody := DocumentUpdateRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
@@ -56,36 +47,32 @@ func (collection *Collection) Update(docId string, document Document) DocumentUp
 		DocId:          docId,
 	}
 
-	result = GRPC_Update_Document(collection, requestBody)
+	result, err := GRPC_Update_Document(collection, requestBody)
 
-	return result
+	return result, err
 }
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (collection *Collection) Delete(docId string) DocumentDeleteResult {
-	var result DocumentDeleteResult
-
+func (collection *Collection) Delete(docId string) (DocumentDeleteResult, error) {
 	requestBody := DocumentDeleteRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
 		DocId:          docId,
 	}
 
-	result = GRPC_Delete_Document(collection, requestBody)
+	result, err := GRPC_Delete_Document(collection, requestBody)
 
-	return result
+	return result, err
 }
 
 // return { Data : Document, Error: "Error message" }, error
-func (collection *Collection) GetAll() DocumentGetAllResult {
-	var result DocumentGetAllResult
-
+func (collection *Collection) GetAll() (DocumentGetAllResult, error) {
 	requestBody := DocumentGetAllRequest{
 		DatabaseName:   collection.DBName,
 		CollectionName: collection.CollectionName,
 	}
 
-	result = GRPC_GetAll_Document(collection, requestBody)
+	result, err := GRPC_GetAll_Document(collection, requestBody)
 
-	return result
+	return result, err
 }
