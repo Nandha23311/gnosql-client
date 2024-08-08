@@ -203,14 +203,21 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 
 	res, gRPCError := gRPC.CreateDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var newDocument Document
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
-	result.Data = newDocument
-	err := ValidateResponse(UnMarshallErr, gRPCError)
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
 
-	return result, err
+	result.Data = newDocument
+
+	return result, nil
 }
 
 func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) (DocumentReadResult, error) {
@@ -228,14 +235,21 @@ func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) (Do
 
 	res, gRPCError := gRPC.ReadDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var newDocument Document
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
-	err := ValidateResponse(UnMarshallErr, gRPCError)
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
+
 	result.Data = newDocument
 
-	return result, err
+	return result, nil
 }
 
 func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest) (DocumentFilterResult, error) {
@@ -260,13 +274,20 @@ func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest)
 
 	res, gRPCError := gRPC.FilterDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var documents []Document
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &documents)
 
-	err := ValidateResponse(UnMarshallErr, gRPCError)
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
+
 	result.Data = documents
 
-	return result, err
+	return result, nil
 }
 
 func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest) (DocumentUpdateResult, error) {
@@ -291,15 +312,21 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 
 	res, gRPCError := gRPC.UpdateDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var newDocument Document
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
-	err := ValidateResponse(UnMarshallErr, gRPCError)
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
 
 	result.Data = newDocument
 
-	return result, err
+	return result, nil
 }
 
 func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest) (DocumentDeleteResult, error) {
@@ -318,10 +345,13 @@ func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest)
 
 	res, gRPCError := gRPC.DeleteDocument(ctx, requestBody)
 
-	result.Data = res.Data
-	err := ValidateResponse(nil, gRPCError)
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
 
-	return result, err
+	result.Data = res.Data
+
+	return result, nil
 }
 
 func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest) (DocumentGetAllResult, error) {
@@ -339,13 +369,20 @@ func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest)
 
 	res, gRPCError := gRPC.GetAllDocuments(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var documents []Document
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &documents)
 
-	result.Data = documents
-	err := ValidateResponse(UnMarshallErr, gRPCError)
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
 
-	return result, err
+	result.Data = documents
+
+	return result, nil
 }
 
 func ConvertToPBCollectionInput(collections []CollectionInput) []*pb.CollectionInput {

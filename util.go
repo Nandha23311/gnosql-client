@@ -12,7 +12,7 @@ func ValidateResponse(UnMarshallErr error, gRPCErr error) error {
 	}
 
 	if gRPCErr != nil {
-		fmt.Printf("\n gRestErr error: %v \n", UnMarshallErr)
+		fmt.Printf("\n gRestErr error: %v \n", gRPCErr)
 		return errors.New(gRPCErr.Error())
 	}
 
