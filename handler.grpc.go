@@ -10,7 +10,7 @@ import (
 )
 
 func GRPC_GetAll_DB(client *Client) (DatabaseGetAllResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = client.GrpcClient
@@ -27,7 +27,7 @@ func GRPC_GetAll_DB(client *Client) (DatabaseGetAllResult, error) {
 }
 
 func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) (DatabaseCreateResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = client.GrpcClient
@@ -49,7 +49,7 @@ func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) (DatabaseCrea
 }
 
 func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) (DatabaseConnectResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = client.GrpcClient
@@ -75,7 +75,7 @@ func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) (DatabaseCon
 }
 
 func GRPC_Delete_DB(database *Database, request DatabaseDeleteRequest) (DatabaseDeleteResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -95,7 +95,7 @@ func GRPC_Delete_DB(database *Database, request DatabaseDeleteRequest) (Database
 }
 
 func GRPC_Create_Collections(database *Database, request CollectionCreateRequest) (CollectionCreateResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -115,7 +115,7 @@ func GRPC_Create_Collections(database *Database, request CollectionCreateRequest
 }
 
 func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest) (CollectionDeleteResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -136,7 +136,7 @@ func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest
 }
 
 func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest) (CollectionGetAllResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -156,7 +156,7 @@ func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest
 }
 
 func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsRequest) (CollectionStatsResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -182,7 +182,7 @@ func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsReques
 }
 
 func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest) (DocumentCreateResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -214,7 +214,7 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 }
 
 func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) (DocumentReadResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -239,7 +239,7 @@ func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) (Do
 }
 
 func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest) (DocumentFilterResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -270,7 +270,7 @@ func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest)
 }
 
 func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest) (DocumentUpdateResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -303,7 +303,7 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 }
 
 func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest) (DocumentDeleteResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -325,7 +325,7 @@ func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest)
 }
 
 func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest) (DocumentGetAllResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
