@@ -1,91 +1,68 @@
 package gnosql_client
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (database *Database) CreateCollections(collections []CollectionInput) CollectionCreateResult {
-	var result CollectionCreateResult
+func (database *Database) CreateCollections(collections []CollectionInput) (CollectionCreateResult, error) {
 
 	requestBody := CollectionCreateRequest{
 		DatabaseName: database.DBName,
 		Collections:  collections,
 	}
 
-	if database.IsgRPC {
-		result = GRPC_Create_Collections(database, requestBody)
-	} else {
-		result = REST_Create_Collections(database, requestBody)
-	}
-
-	if result.Error != nil {
+	result, err := GRPC_Create_Collections(database, requestBody)
+	if err == nil {
 		var collectionNames []string
-		var collectionsResult CollectionGetAllResult = database.GetAll()
+		collectionsResult, collectionsResultErr := database.GetAll()
 
-		if collectionsResult.Error != nil {
+		if collectionsResultErr == nil {
 			collectionNames = append(collectionNames, collectionsResult.Data...)
-
 			CreateCollectionsInstance(database, collectionNames)
 		}
 
 	}
 
-	return result
+	return result, nil
 }
 
 // return { Data : "Success Message", Error: "Error message" }, error
-func (database *Database) DeleteCollections(collectionDeleteInput CollectionDeleteInput) CollectionDeleteResult {
-	var result CollectionDeleteResult
+func (database *Database) DeleteCollections(collectionDeleteInput CollectionDeleteInput) (CollectionDeleteResult, error) {
 
 	requestBody := CollectionDeleteRequest{
 		DatabaseName: database.DBName,
 		Collections:  collectionDeleteInput.Collections,
 	}
 
-	if database.IsgRPC {
-		result = GRPC_Delete_Collections(database, requestBody)
-	} else {
-		result = REST_Delete_Collections(database, requestBody)
+	result, err := GRPC_Delete_Collections(database, requestBody)
+
+	if err == nil && result.Data == COLLECTION_DELETE_SUCCESS_MSG {
+		DeleteCollectionInstances(database, collectionDeleteInput.Collections)
 	}
 
-	if result.Error != nil {
-		if result.Data == COLLECTION_DELETE_SUCCESS_MSG {
-			DeleteCollectionInstances(database, collectionDeleteInput.Collections)
-		}
-	}
-
-	return result
+	return result, nil
 }
 
 // return { Data : [collection1, collection2...], Error: "Error message" }, error
-func (database *Database) GetAll() CollectionGetAllResult {
-	var result CollectionGetAllResult
+func (database *Database) GetAll() (CollectionGetAllResult, error) {
 
 	requestBody := CollectionGetAllRequest{
 		DatabaseName: database.DBName,
 	}
 
-	if database.IsgRPC {
-		result = GRPC_GetAll_Collections(database, requestBody)
-	} else {
-		result = REST_GetAll_Collections(database, requestBody)
-	}
-
-	return result
+	result, err := GRPC_GetAll_Collections(database, requestBody)
+	return result, err
 }
 
 // return { Data : { CollectionName string, IndexKeys []string, Documents int} , Error: "Error message" }, error
-func (database *Database) GetCollectionStats(collectionName string) CollectionStatsResult {
+func (database *Database) GetCollectionStats(collectionName string) (CollectionStatsResult, error) {
 	var result CollectionStatsResult
 
 	requestBody := CollectionStatsRequest{
 		DatabaseName:   database.DBName,
 		CollectionName: collectionName,
 	}
-	if database.IsgRPC {
-		result = GRPC_Get_Collection_Stats(database, requestBody)
-	} else {
-		result = REST_Get_Collection_Stats(database, requestBody)
-	}
 
-	return result
+	result, err := GRPC_Get_Collection_Stats(database, requestBody)
+
+	return result, err
 }
 
 func CreateCollectionsInstance(database *Database, collectionNames []string) {

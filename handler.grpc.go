@@ -9,8 +9,8 @@ import (
 	pb "github.com/nanda03dev/gnosql_client/proto"
 )
 
-func GRPC_GetAll_DB(client *Client) DatabaseGetAllResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_GetAll_DB(client *Client) (DatabaseGetAllResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = client.GrpcClient
@@ -21,12 +21,13 @@ func GRPC_GetAll_DB(client *Client) DatabaseGetAllResult {
 
 	result.Data = res.GetData()
 
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
-	return result
+	err := ValidateResponse(nil, gRPCError)
+
+	return result, err
 }
 
-func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) DatabaseCreateResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) (DatabaseCreateResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = client.GrpcClient
@@ -41,13 +42,14 @@ func GRPC_Create_DB(client *Client, request DatabaseCreateRequest) DatabaseCreat
 	res, gRPCError := gRPC.CreateNewDatabase(ctx, requestBody)
 
 	result.Data = res.GetData()
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
 
-	return result
+	err := ValidateResponse(nil, gRPCError)
+
+	return result, err
 }
 
-func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) DatabaseConnectResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) (DatabaseConnectResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = client.GrpcClient
@@ -66,13 +68,14 @@ func GRPC_Connect_DB(client *Client, request DatabaseCreateRequest) DatabaseConn
 		DatabaseName: resultData.DatabaseName,
 		Collections:  resultData.Collections,
 	}
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
 
-	return result
+	err := ValidateResponse(nil, gRPCError)
+
+	return result, err
 }
 
-func GRPC_Delete_DB(database *Database, request DatabaseDeleteRequest) DatabaseDeleteResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Delete_DB(database *Database, request DatabaseDeleteRequest) (DatabaseDeleteResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -86,13 +89,13 @@ func GRPC_Delete_DB(database *Database, request DatabaseDeleteRequest) DatabaseD
 	res, gRPCError := gRPC.DeleteDatabase(ctx, requestBody)
 
 	result.Data = res.GetData()
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+	err := ValidateResponse(nil, gRPCError)
 
-	return result
+	return result, err
 }
 
-func GRPC_Create_Collections(database *Database, request CollectionCreateRequest) CollectionCreateResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Create_Collections(database *Database, request CollectionCreateRequest) (CollectionCreateResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -106,13 +109,13 @@ func GRPC_Create_Collections(database *Database, request CollectionCreateRequest
 	res, gRPCError := gRPC.CreateNewCollection(ctx, requestBody)
 
 	result.Data = res.GetData()
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+	err := ValidateResponse(nil, gRPCError)
 
-	return result
+	return result, err
 }
 
-func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest) CollectionDeleteResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest) (CollectionDeleteResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -127,13 +130,13 @@ func GRPC_Delete_Collections(database *Database, request CollectionDeleteRequest
 	res, gRPCError := gRPC.DeleteCollections(ctx, requestBody)
 
 	result.Data = res.GetData()
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+	err := ValidateResponse(nil, gRPCError)
 
-	return result
+	return result, err
 }
 
-func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest) CollectionGetAllResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest) (CollectionGetAllResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -147,13 +150,13 @@ func GRPC_GetAll_Collections(database *Database, request CollectionGetAllRequest
 	res, gRPCError := gRPC.GetAllCollections(ctx, requestBody)
 
 	result.Data = res.GetData()
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+	err := ValidateResponse(nil, gRPCError)
 
-	return result
+	return result, err
 }
 
-func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsRequest) CollectionStatsResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsRequest) (CollectionStatsResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = database.GrpcClient
@@ -173,13 +176,13 @@ func GRPC_Get_Collection_Stats(database *Database, request CollectionStatsReques
 		Documents:      res.GetData().GetDocuments(),
 	}
 
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+	err := ValidateResponse(nil, gRPCError)
 
-	return result
+	return result, err
 }
 
-func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest) DocumentCreateResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest) (DocumentCreateResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -189,8 +192,7 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 	documentData, MarshallErr := json.Marshal(request.Document)
 
 	if MarshallErr != nil {
-		result.Error = errors.New(ERROR_WHILE_MARSHAL_JSON)
-		return result
+		return result, errors.New(ERROR_WHILE_MARSHAL_JSON)
 	}
 
 	requestBody := &pb.DocumentCreateRequest{
@@ -201,19 +203,25 @@ func GRPC_Create_Document(collection *Collection, request DocumentCreateRequest)
 
 	res, gRPCError := gRPC.CreateDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var newDocument Document
-	result.Error = errors.New(res.GetError())
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
-	result.Data = newDocument
-	result.Error = ValidateResponse(nil, UnMarshallErr, gRPCError, res.GetError())
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
 
-	return result
+	result.Data = newDocument
+
+	return result, nil
 }
 
-func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) DocumentReadResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) (DocumentReadResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -227,18 +235,25 @@ func GRPC_Read_Document(collection *Collection, request DocumentReadRequest) Doc
 
 	res, gRPCError := gRPC.ReadDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var newDocument Document
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
-	result.Error = ValidateResponse(nil, UnMarshallErr, gRPCError, res.GetError())
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
+
 	result.Data = newDocument
 
-	return result
+	return result, nil
 }
 
-func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest) DocumentFilterResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest) (DocumentFilterResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -248,8 +263,7 @@ func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest)
 	filterQuery, MarshallErr := json.Marshal(request.Filter)
 
 	if MarshallErr != nil {
-		result.Error = errors.New(ERROR_WHILE_MARSHAL_JSON)
-		return result
+		return result, errors.New(ERROR_WHILE_MARSHAL_JSON)
 	}
 
 	requestBody := &pb.DocumentFilterRequest{
@@ -260,17 +274,24 @@ func GRPC_Filter_Document(collection *Collection, request DocumentFilterRequest)
 
 	res, gRPCError := gRPC.FilterDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var documents []Document
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &documents)
 
-	result.Error = ValidateResponse(nil, UnMarshallErr, gRPCError, res.GetError())
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
+
 	result.Data = documents
 
-	return result
+	return result, nil
 }
 
-func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest) DocumentUpdateResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest) (DocumentUpdateResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -279,8 +300,7 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 	documentData, MarshallErr := json.Marshal(request.Document)
 
 	if MarshallErr != nil {
-		result.Error = errors.New(ERROR_WHILE_MARSHAL_JSON)
-		return result
+		return result, errors.New(ERROR_WHILE_MARSHAL_JSON)
 	}
 
 	requestBody := &pb.DocumentUpdateRequest{
@@ -292,19 +312,25 @@ func GRPC_Update_Document(collection *Collection, request DocumentUpdateRequest)
 
 	res, gRPCError := gRPC.UpdateDocument(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var newDocument Document
 
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &newDocument)
 
-	result.Error = ValidateResponse(nil, UnMarshallErr, gRPCError, res.GetError())
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
 
 	result.Data = newDocument
 
-	return result
+	return result, nil
 }
 
-func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest) DocumentDeleteResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest) (DocumentDeleteResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -319,14 +345,17 @@ func GRPC_Delete_Document(collection *Collection, request DocumentDeleteRequest)
 
 	res, gRPCError := gRPC.DeleteDocument(ctx, requestBody)
 
-	result.Data = res.Data
-	result.Error = ValidateResponse(nil, nil, gRPCError, res.GetError())
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
 
-	return result
+	result.Data = res.Data
+
+	return result, nil
 }
 
-func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest) DocumentGetAllResult {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest) (DocumentGetAllResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	var gRPC = collection.GrpcClient
@@ -340,13 +369,20 @@ func GRPC_GetAll_Document(collection *Collection, request DocumentGetAllRequest)
 
 	res, gRPCError := gRPC.GetAllDocuments(ctx, requestBody)
 
+	if gRPCError != nil {
+		return result, ValidateResponse(nil, gRPCError)
+	}
+
 	var documents []Document
 	var UnMarshallErr = json.Unmarshal([]byte(res.Data), &documents)
 
-	result.Data = documents
-	result.Error = ValidateResponse(nil, UnMarshallErr, gRPCError, res.GetError())
+	if UnMarshallErr != nil {
+		return result, ValidateResponse(UnMarshallErr, nil)
+	}
 
-	return result
+	result.Data = documents
+
+	return result, nil
 }
 
 func ConvertToPBCollectionInput(collections []CollectionInput) []*pb.CollectionInput {
