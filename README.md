@@ -16,3 +16,102 @@ GnoSQL Client is a Go library that provides a client for interacting with the Gn
 ```bash
 go get -u github.com/nanda03dev/gnosql_client
 ```
+
+## Usage
+
+### 1. Connect to the Database
+
+First, connect to the GnoSQL database using the GRPC URI and the desired database name.
+
+```go
+var DatabaseName = "test-g-c"
+
+// Connect to the GnoSQL database
+db := Connect(GRPC_URI, DatabaseName, true)
+```
+
+### 2. Create a Collection
+
+Define the collection and its index keys, and create it in the database.
+
+```go
+var userCollectionName = "users"
+
+// Define the collection input with index keys
+UserCollectionInput := CollectionInput{
+	CollectionName: userCollectionName,
+	IndexKeys:      []string{"city", "pincode"},
+}
+
+// Create the collection
+db.CreateCollections([]CollectionInput{UserCollectionInput})
+```
+
+### 3. Perform CRUD Operations on Documents
+
+Get the collection, and then perform Create, Read, Update, and Delete operations on documents within the collection.
+
+#### a. Create a Document
+
+```go
+// Get the collection
+var userCollection *Collection = db.Collections[userCollectionName]
+
+// Create a document
+user1 := make(Document)
+user1["name"] = "Nandakumar"
+user1["city"] = "Chennai"
+user1["pincode"] = "600100"
+
+// Insert the document into the collection
+userCollection.Create(user1)
+```
+
+#### b. Read a Document
+
+```go
+// Read the document by its ID
+var docId = "your-document-id" // Replace with your actual document ID
+userCollection.Read(docId)
+```
+
+#### c. Update a Document
+
+```go
+// Update the document
+user1["designation"] = "developer"
+userCollection.Update(docId, user1)
+```
+
+#### d. Filter Documents
+
+```go
+// Define a filter to find documents by a specific field
+var filter MapInterface = MapInterface{
+	"name": "Nandakumar",
+}
+
+// Filter documents in the collection
+userCollection.Filter(filter)
+```
+
+#### e. Delete a Document
+
+```go
+// Delete the document by its ID
+userCollection.Delete(docId)
+```
+
+### 4. Delete a Collection
+
+Delete a specific collection from the database.
+
+```go
+// Define the collection to be deleted
+var collectionDeleteInput = CollectionDeleteInput{
+	Collections: []string{userCollectionName},
+}
+
+// Delete the collection
+db.DeleteCollections(collectionDeleteInput)
+```
